@@ -1,0 +1,38 @@
+﻿@page "/logout"
+
+@inject NavigationManager Nav
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+@inject LoginService loginService
+
+<h3>Logging Out...</h3>
+
+
+
+
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (loginService.IsLoggedIn)
+        {
+            loginService.Id = 0;
+            loginService.UserName = string.Empty;
+            loginService.IsLoggedIn = false;
+
+
+            await Task.Delay(1000);
+            Nav.NavigateTo("/");
+
+        }
+        else
+        {
+            await Task.Delay(1000);
+
+            Nav.NavigateTo("/");
+        }
+    }
+
+}

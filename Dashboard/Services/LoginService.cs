@@ -6,5 +6,6 @@
         public string? Username { get; set; }
         public bool IsLoggedIn { get; set; }
         public bool IsAdmin { get; set; }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject Dashboard.Services.LoginService loginService
 
 <div class="page">
     <div class="sidebar">
@@ -10,7 +11,14 @@
         <div class="top-row px-4">
             <a href="/">Dashboard</a>
 
-            <a href="/login">Log in</a>
+            @if (!loginService.IsLoggedIn)
+            {
+                <a href="login">Login</a>
+            }
+            else
+            {
+                <a href="logout">Logout</a>
+            }
         </div>
 
         <article class="content px-4">
