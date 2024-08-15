@@ -64,7 +64,7 @@ Vi har ingen grund til at tilføje ekstra komplexitet til et projekt hvor vi ikk
 ![image](https://github.com/user-attachments/assets/102f0526-e037-456f-9b37-fac330b15767)
 
 ## Mockup
-![image](https://github.com/user-attachments/assets/a45de055-da95-46af-a529-f13beb986694)
+![image](https://github.com/user-attachments/assets/fd57d53d-931f-4784-840b-b30dc2fb9107)
 
 
 
