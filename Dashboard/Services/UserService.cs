@@ -14,7 +14,7 @@ namespace Dashboard.Services
             _context = context;
         }
 
-        public void CreateUserWithLocation(User user, string city, float longitude, float latitude)
+        public void CreateUserWithLocation(User user, int zipCode, string cityName, string country)
         {
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
@@ -27,14 +27,15 @@ namespace Dashboard.Services
             var location = new Location
             {
                 UserId = user.Id,
-                City = city,
-                Longitude = longitude,
-                Latitude = latitude
+                ZipCode = zipCode,
+                CityName = cityName,
+                Country = country
             };
 
             // Add the Location to the DbContext
             _context.Locations.Add(location);
             _context.SaveChanges();
         }
+
     }
 }

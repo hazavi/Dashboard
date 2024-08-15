@@ -1,7 +1,5 @@
 ﻿using Dashboard.Model;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-
 
 namespace Dashboard.Connect
 {
@@ -10,8 +8,8 @@ namespace Dashboard.Connect
         public DashboardDbContext(DbContextOptions<DashboardDbContext> options)
             : base(options)
         {
-
         }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Location> Locations { get; set; }
@@ -19,22 +17,24 @@ namespace Dashboard.Connect
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //sætter userId som foreign key
+            base.OnModelCreating(modelBuilder);
+
+            // Configure User-Setting relationship
             modelBuilder.Entity<Setting>()
-                .HasOne(s => s.User)
-                .WithMany()
-                .HasForeignKey(s => s.UserId);
-            
-            modelBuilder.Entity<Location>()
-                .HasOne(s => s.User)
-                .WithMany()
+                .HasOne<User>() // Navigation property not needed if not used
+                .WithMany() // No navigation property on User side
                 .HasForeignKey(s => s.UserId);
 
-            //automatisk sætter en datecreate når man laver en todo
+            // Configure User-Location relationship
+            modelBuilder.Entity<Location>()
+                .HasOne<User>() // Navigation property not needed if not used
+                .WithMany() // No navigation property on User side
+                .HasForeignKey(l => l.UserId);
+
+            // Configure default value for DateCreated in TodoList
             modelBuilder.Entity<TodoList>()
-                .Property(e => e.DateCreated)
+                .Property(t => t.DateCreated)
                 .HasDefaultValueSql("GETDATE()");
         }
-
     }
 }

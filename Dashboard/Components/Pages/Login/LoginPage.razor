@@ -1,0 +1,103 @@
+﻿@page "/login"
+@using Microsoft.EntityFrameworkCore
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Nav
+@using Dashboard.Connect
+@inject Dashboard.Connect.DashboardDbContext DB
+@inject Dashboard.Services.LoginService loginService
+@inject NavigationManager Nav
+@using Dashboard.Model
+@inject ToastService toastService
+
+@if (loginService.IsLoggedIn)
+{
+    <div class="text-center">
+        <p>You are already logged in. Redirecting to your profile...</p>
+        <p>If you are not redirected, <a href="/user/@loginService.Id">click here</a>.</p>
+    </div>
+}
+else
+{
+    <h1 class="text-center">Login</h1>
+
+    <div class="container w-50">
+        <EditForm Model="user" OnSubmit="Login" FormName="login">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <InputText id="username" @bind-Value="user.Username" class="form-control" />
+                <ValidationMessage For="() => user.Username" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <InputText id="password" type="password" @bind-Value="user.Password" class="form-control" />
+                <ValidationMessage For="() => user.Password" class="text-danger" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger" role="alert">@errorMessage</div>
+            }
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <div>
+                <p>No account? <a href="/users/create">Create Account here</a></p>
+            </div>
+        </EditForm>
+    </div>
+
+    @code {
+    private User user { get; set; } = new();
+    private string errorMessage;
+
+    [Inject] protected ToastService ToastService { get; set; } = default!;
+
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    private void ShowMessage(ToastType toastType) => messages.Add(CreateToastMessage(toastType));
+
+    private ToastMessage CreateToastMessage(ToastType toastType)
+    {
+        string message = toastType == ToastType.Success
+            ? $"Logged in successfully!"
+            : $"Login failed!";
+
+        return new ToastMessage
+            {
+                Type = toastType,
+                Message = message,
+            };
+    }
+
+    protected override void OnInitialized()
+    {
+        if (loginService.IsLoggedIn)
+        {
+            Nav.NavigateTo($"/");
+        }
+    }
+
+    private async Task Login()
+    {
+        var authenticatedUser = await DB.Users
+            .FirstOrDefaultAsync(u => u.Username == user.Username && u.Password == user.Password);
+
+        if (authenticatedUser != null)
+        {
+            loginService.Id = authenticatedUser.Id;
+            loginService.Username = authenticatedUser.Username;
+            loginService.IsLoggedIn = true;
+            loginService.IsAdmin = authenticatedUser.Username == "admin";
+
+            ToastService.Notify(new(ToastType.Success, $"Logged in successfully."));
+
+            await Task.Delay(1000);
+            Nav.NavigateTo($"/");
+        }
+        else
+        {
+            errorMessage = "Invalid username or password. Please try again.";
+        }
+    }
+    }
+}

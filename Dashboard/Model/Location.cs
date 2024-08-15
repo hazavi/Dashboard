@@ -6,9 +6,9 @@ namespace Dashboard.Model
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public string City { get; set; }
-        public float Longitude { get; set; }
-        public float Latitude { get; set; }
+        public int ZipCode { get; set; }
+        public string CityName { get; set; }
+        public string Country { get; set; }
 
         [ForeignKey("UserId")]
         public User User { get; set; }

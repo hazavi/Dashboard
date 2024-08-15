@@ -7,24 +7,22 @@ using Dashboard.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Services
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddSingleton<LoginService>();
 
 //Bootstrap
 builder.Services.AddBlazorBootstrap();
 
-// Services
-builder.Services.AddScoped<UserService>();
-builder.Services.AddSingleton<LoginService>();
 
-//connection string
+// Connection string
 builder.Services.AddDbContext<DashboardDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 
