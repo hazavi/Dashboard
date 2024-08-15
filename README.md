@@ -55,7 +55,7 @@ Vi har ingen grund til at tilføje ekstra komplexitet til et projekt hvor vi ikk
 ![image](https://github.com/user-attachments/assets/f459e772-18de-45b4-aa36-d6cf3ba0c28e)
 
 ## ER diagram
-![image](https://github.com/user-attachments/assets/cd0045d2-92ce-42ca-b294-c8171517184a)
+![erDiagram2](https://github.com/user-attachments/assets/14b26b12-bbe6-46c3-bca2-524a8e338a5d)
 
 ## Flowchart
 ![image](https://github.com/user-attachments/assets/20f13cf9-37ad-4679-97db-301a08c23053)
