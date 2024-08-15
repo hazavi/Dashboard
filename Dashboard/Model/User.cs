@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Dashboard.Model.Users
+namespace Dashboard.Model
 {
     public class User
     {
@@ -13,9 +13,6 @@ namespace Dashboard.Model.Users
         [StringLength(20)]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Please Confirm the Password")]
-        [StringLength(20)]
-        public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Please provide an Email")]
         [StringLength(100)]
