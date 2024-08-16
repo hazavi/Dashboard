@@ -4,13 +4,21 @@
 <div class="top-row navbar navbar-dark">
     <div class="container-fluid d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center ">
-            <Icon Name="IconName.PersonFill" Size="IconSize.x1" Style="margin-left: -20px;margin-right: 10px;margin-top: -10px;margin-bottom: -10px; color: white; " />
+            
             @if (!loginService.IsLoggedIn)
             {
+                <a href="/login" style="display: inline-block; margin-top: -10px; margin-left: -10px;">
+                    <Icon Name="IconName.PersonFill" Size="IconSize.x1" Style=" color: white;" />
+                </a>
+
                 <span>Not Logged In</span>
+
             }
             else
             {
+                <a href="/profile" style="display: inline-block; margin-top: -10px; margin-left: -10px;">
+                    <Icon Name="IconName.PersonFill" Size="IconSize.x1" Style=" color: white;" />
+                </a>
                 <span>Hello, @loginService.Username</span>
             }
         </div>
@@ -35,8 +43,8 @@
         </div>        
         
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="notes">
-                <Icon Name="IconName.StickyFill" Size="IconSize.x4" Style="margin-right: 10px;" /> Notes
+            <NavLink class="nav-link" href="todo">
+                <Icon Name="IconName.StickyFill" Size="IconSize.x4" Style="margin-right: 10px;" /> ToDo
             </NavLink>
         </div>        
         

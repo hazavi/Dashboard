@@ -5,11 +5,10 @@
 @inject NavigationManager NavigationManager
 @inject DashboardDbContext DbContext
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Register User</PageTitle>
 
-<h1>Create</h1>
+<h1>Create New User</h1>
 
-<h4>User</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -46,8 +45,11 @@
 
     public async Task AddUser()
     {
+        // Add the user to the database
         DbContext.Users.Add(User);
         await DbContext.SaveChangesAsync();
-        NavigationManager.NavigateTo("/users");
+
+        // Redirect to the location creation page with the user's ID as a query parameter
+        NavigationManager.NavigateTo($"/locations/create?userId={User.Id}");
     }
 }

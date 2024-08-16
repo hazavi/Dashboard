@@ -24,4 +24,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\Pages\TodoList\" />
+    <Folder Include="Components\Pages\Weather\" />
+    <Folder Include="Services\API\" />
+  </ItemGroup>
+
 </Project>
