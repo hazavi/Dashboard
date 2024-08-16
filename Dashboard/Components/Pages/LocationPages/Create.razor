@@ -1,0 +1,61 @@
+﻿@page "/locations/create"
+
+@using Microsoft.EntityFrameworkCore
+@using Dashboard.Model
+@inject IDbContextFactory<Dashboard.Connect.DashboardDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>Location</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Location" OnValidSubmit="AddLocation" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="userid" class="form-label">UserId:</label> 
+                <InputNumber id="userid" @bind-Value="Location.UserId" class="form-control" /> 
+                <ValidationMessage For="() => Location.UserId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="zipcode" class="form-label">ZipCode:</label> 
+                <InputNumber id="zipcode" @bind-Value="Location.ZipCode" class="form-control" /> 
+                <ValidationMessage For="() => Location.ZipCode" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="cityname" class="form-label">CityName:</label> 
+                <InputText id="cityname" @bind-Value="Location.CityName" class="form-control" /> 
+                <ValidationMessage For="() => Location.CityName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="country" class="form-label">Country:</label> 
+                <InputText id="country" @bind-Value="Location.Country" class="form-control" /> 
+                <ValidationMessage For="() => Location.Country" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/locations">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Location Location { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddLocation()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Locations.Add(Location);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/locations");
+    }
+}

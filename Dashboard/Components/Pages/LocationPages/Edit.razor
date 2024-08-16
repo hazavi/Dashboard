@@ -1,0 +1,105 @@
+﻿@page "/Locations/edit"
+
+@using Microsoft.EntityFrameworkCore
+@using Dashboard.Model
+@inject IDbContextFactory<Dashboard.Connect.DashboardDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Location</h4>
+<hr />
+@if (Location is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Location" OnValidSubmit="UpdateLocation" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Location.Id" value="@Location.Id" />
+                <div class="mb-3">
+                    <label for="userid" class="form-label">UserId:</label>
+                    <InputNumber id="userid" @bind-Value="Location.UserId" class="form-control" />
+                    <ValidationMessage For="() => Location.UserId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="zipcode" class="form-label">ZipCode:</label>
+                    <InputNumber id="zipcode" @bind-Value="Location.ZipCode" class="form-control" />
+                    <ValidationMessage For="() => Location.ZipCode" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="cityname" class="form-label">CityName:</label>
+                    <InputText id="cityname" @bind-Value="Location.CityName" class="form-control" />
+                    <ValidationMessage For="() => Location.CityName" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="country" class="form-label">Country:</label>
+                    <InputText id="country" @bind-Value="Location.Country" class="form-control" />
+                    <ValidationMessage For="() => Location.Country" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/locations">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public Location? Location { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Location ??= await context.Locations.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Location is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateLocation()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Location!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!LocationExists(Location!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/locations");
+    }
+
+    bool LocationExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Locations.Any(e => e.Id == id);
+    }
+}

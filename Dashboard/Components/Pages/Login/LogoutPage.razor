@@ -3,11 +3,9 @@
 @inject NavigationManager Nav
 @inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
-@inject LoginService loginService
+@inject Dashboard.Services.LoginService loginService
 
 <h3>Logging Out...</h3>
-
-
 
 
 
@@ -19,19 +17,19 @@
         if (loginService.IsLoggedIn)
         {
             loginService.Id = 0;
-            loginService.UserName = string.Empty;
+            loginService.Username = string.Empty;
             loginService.IsLoggedIn = false;
 
 
             await Task.Delay(1000);
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/",true);
 
         }
         else
         {
             await Task.Delay(1000);
 
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/",true);
         }
     }
 

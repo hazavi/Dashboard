@@ -13,6 +13,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<UserService>();
 builder.Services.AddSingleton<LoginService>();
 
+
+
 //Bootstrap
 builder.Services.AddBlazorBootstrap();
 
