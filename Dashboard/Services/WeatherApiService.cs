@@ -25,6 +25,7 @@ public class WeatherApiService
                 WeatherDescription = response.Weather[0].Description,
                 Humidity = response.Main.Humidity,
                 WindSpeed = response.Wind.Speed,
+                IconUrl = $"http://openweathermap.org/img/wn/{response.Weather[0].Icon}@2x.png", // URL for the weather icon
                 Timestamp = DateTime.UtcNow // Set timestamp to current UTC time
             };
         }
@@ -50,6 +51,7 @@ public class OpenWeatherResponse
     {
         public string Main { get; set; }
         public string Description { get; set; }
+        public string Icon { get; set; }
     }
 
     public class WindData
@@ -66,6 +68,8 @@ public class WeatherData
     public string WeatherDescription { get; set; }
     public int Humidity { get; set; }
     public float WindSpeed { get; set; }
+    public string IconUrl { get; set; } // URL for the weather icon
+
 
     // Property to get rounded temperature
     public int RoundedTemperature => (int)Math.Round(Temperature);

@@ -2,18 +2,19 @@
 @using Dashboard.Services
 @inject WeatherApiService WeatherApiService
 
-
-<h3>Weather for @city</h3>
-
 @if (weatherData != null)
 {
-    <div>
-        <p>Temperature: @weatherData.RoundedTemperature &deg;C</p>
-        <p>Weather: @weatherData.WeatherMain</p>
-        <p>Description: @weatherData.WeatherDescription</p>
-        <p>Humidity: @weatherData.Humidity %</p>
-        <p>Wind Speed: @weatherData.WindSpeed m/s</p>
-        <p>Timestamp: @weatherData.Timestamp</p>
+    <div class="weather-card">
+        <h2><strong>@weatherData.City</strong></h2>
+        <img src="@weatherData.IconUrl" alt="Weather Icon" />
+        <div class="weather-info">
+            <p class="temperature">Temperature: @weatherData.RoundedTemperature &deg;C</p>
+            <p><strong>Weather:</strong> @weatherData.WeatherMain</p>
+            <p><strong>Description:</strong> @weatherData.WeatherDescription</p>
+            <p><strong>Humidity:</strong> @weatherData.Humidity %</p>
+            <p><strong>Wind Speed:</strong> @weatherData.WindSpeed m/s</p>
+            <p><strong>Timestamp:</strong> @weatherData.Timestamp</p>
+        </div>
     </div>
 }
 else if (loading)
