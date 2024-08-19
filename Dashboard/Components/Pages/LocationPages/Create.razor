@@ -1,5 +1,4 @@
 ﻿@page "/locations/create/{userId:int}"
-
 @using Microsoft.EntityFrameworkCore
 @using Dashboard.Model
 @inject DashboardDbContext DbContext
@@ -43,7 +42,7 @@
 </div>
 
 <div>
-    <a href="/locations">Back to List</a>
+    <a href="/profile" class="btn btn-secondary">Back to Profile</a>
 </div>
 
 @code {
@@ -60,11 +59,20 @@
 
     public async Task AddLocation()
     {
+        // Check if the user already has a location
+        var existingLocation = await DbContext.Locations.FirstOrDefaultAsync(l => l.UserId == Location.UserId);
+        if (existingLocation != null)
+        {
+            // Optionally, handle this case (e.g., show an error message or redirect)
+            NavigationManager.NavigateTo("/profile");
+            return;
+        }
+
         // Add the location to the context and save it
         DbContext.Locations.Add(Location);
         await DbContext.SaveChangesAsync();
 
-        // Navigate to the locations list page after successful creation
-        NavigationManager.NavigateTo("/locations");
+        // Navigate to the profile page after successful creation
+        NavigationManager.NavigateTo("/profile");
     }
 }

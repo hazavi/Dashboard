@@ -50,6 +50,6 @@
         await DbContext.SaveChangesAsync();
 
         // Redirect to the location creation page with the user's ID as a query parameter
-        NavigationManager.NavigateTo($"/locations/create?userId={User.Id}");
+        NavigationManager.NavigateTo($"/profile");
     }
 }

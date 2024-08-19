@@ -26,10 +26,10 @@ namespace Dashboard.Connect
                 .HasForeignKey(s => s.UserId);
 
             // Configure User-Location relationship
-            modelBuilder.Entity<Location>()
-                .HasOne<User>() // Navigation property not needed if not used
-                .WithMany() // No navigation property on User side
-                .HasForeignKey(l => l.UserId);
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Location)
+                .WithOne(l => l.User)
+                .HasForeignKey<Location>(l => l.UserId);
 
             // Configure default value for DateCreated in TodoList
             modelBuilder.Entity<TodoList>()

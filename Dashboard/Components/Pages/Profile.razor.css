@@ -1,5 +1,47 @@
 ﻿.card {
-    background-color: #0085FF;
-    color: #ffffff;
+    background-color: #0085FF; /* Blue background color */
+    color: #ffffff; /* White text color */
+    border-radius: 10px; /* Rounded corners for the card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Soft shadow for the card */
+}
 
+.card-header {
+    background-color: #0056b3; /* Slightly darker blue for the header */
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    color: #ffffff; 
+}
+
+.btn-primary {
+    background-color: #ffffff; /* White background for the button */
+    color: #0085FF; /* Blue text color for the button */
+    border: 2px solid #ffffff; /* White border to match the button */
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+    .btn-primary:hover {
+        background-color: #e0e0e0; 
+        color: #0085FF; 
+        border-color: #0085FF; 
+    }
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 4px solid #ffffff; /* White border for the profile image */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow around the image */
 }

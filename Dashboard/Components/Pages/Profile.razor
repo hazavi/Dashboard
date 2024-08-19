@@ -9,33 +9,55 @@
 {
     @if (user != null)
     {
-        <div class="card mt-4 shadow-sm" style="max-width: 600px; margin: auto;">
-            <div class="row g-0">
-                <!-- Profile Image Section -->
-                <div class="col-md-4 text-center p-3">
-                    <img src="/imgs/cat.PNG" class="img-fluid rounded-circle" alt="Profile Image" />
-                </div>
-                <!-- Profile Details Section -->
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h2 class="card-title">Profile</h2>
-                        <hr />
-                        <p class="card-text"><strong>Username:</strong> @user.Username</p>
-                        <p class="card-text"><strong>Email:</strong> @user.Email</p>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm">
+                        <!-- Profile Image Section -->
+                        <div class="card-header text-center">
+                            <img src="/imgs/cat.PNG" class="img-fluid rounded-circle" alt="Profile Image" style="width: 120px; height: 120px; object-fit: cover;" />
+                        </div>
+                        <!-- Profile Details Section -->
+                        <div class="card-body text-center">
+                            <h2 class="card-title mb-3">Profile</h2>
+                            <p class="card-text"><strong>Username:</strong> @user.Username</p>
+                            <p class="card-text"><strong>Email:</strong> @user.Email</p>
+                            <hr />
+                            @if (user.Location != null)
+                            {
+                                <!-- Location Details Section -->
+                                <div class="mt-4">
+                                    <h3 class="mb-3">Location</h3>
+                                    <p><strong>City:</strong> @user.Location.CityName</p>
+                                    <p><strong>Country:</strong> @user.Location.Country</p>
+                                    <p><strong>ZipCode:</strong> @user.Location.ZipCode</p>
+                                </div>
+                            }
+                            else
+                            {
+                                <!-- Button to add location -->
+                                <div class="mt-4">
+                                    <a href="/locations/create/@user.Id" class="btn btn-primary">Add Location</a>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
     }
     else
     {
-        <p class="text-center">Loading profile...</p>
+        <div class="text-center mt-5">
+            <p>Loading profile...</p>
+        </div>
     }
 }
 else
 {
-    <p class="text-center">Please Login...</p>
+    <div class="text-center mt-5">
+        <p>Please Login...</p>
+    </div>
 }
 
 @code {
@@ -45,9 +67,11 @@ else
     {
         if (loginService != null && loginService.IsLoggedIn)
         {
-            user = await DB.Users.FirstOrDefaultAsync(m => m.Id == loginService.Id);
+            user = await DB.Users
+                .Include(u => u.Location) // Eagerly load the Location property
+                .FirstOrDefaultAsync(m => m.Id == loginService.Id);
 
-            if (user is null)
+            if (user == null)
             {
                 Nav.NavigateTo("notfound");
             }

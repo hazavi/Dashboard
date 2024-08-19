@@ -17,5 +17,8 @@ namespace Dashboard.Model
         [Required(ErrorMessage = "Please provide an Email")]
         [StringLength(100)]
         public string Email { get; set; }
+
+        public Location Location { get; set; }
+
     }
 }

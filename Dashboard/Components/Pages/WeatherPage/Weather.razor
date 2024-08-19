@@ -1,6 +1,10 @@
 ﻿@page "/weather"
 @using Dashboard.Services
+@using Dashboard.Model
+@using Microsoft.EntityFrameworkCore
 @inject WeatherApiService WeatherApiService
+@inject Dashboard.Connect.DashboardDbContext DbContext
+@inject Dashboard.Services.LoginService LoginService
 
 @if (weatherData != null)
 {
@@ -29,16 +33,39 @@ else
 @code {
     private WeatherData weatherData;
     private bool loading;
-    private string city = "Copenhagen";
+    private string city;
 
     protected override async Task OnInitializedAsync()
     {
-        await FetchWeather();
+        await SetCityAndFetchWeather();
     }
 
-    private async Task FetchWeather()
+    private async Task SetCityAndFetchWeather()
     {
         loading = true;
+
+        // Determine the city to fetch weather for
+        if (LoginService.IsLoggedIn)
+        {
+            var user = await DbContext.Users
+                .Include(u => u.Location) // Ensure Location is included
+                .FirstOrDefaultAsync(u => u.Id == LoginService.Id);
+
+            if (user?.Location != null)
+            {
+                city = user.Location.CityName;
+            }
+            else
+            {
+                city = "London"; // Default city if location not found
+            }
+        }
+        else
+        {
+            city = "London"; // Default city for non-logged-in users
+        }
+
+        // Fetch the weather data
         weatherData = await WeatherApiService.GetWeatherAsync(city);
         loading = false;
     }
