@@ -1,0 +1,77 @@
+﻿@page "/todolists/delete"
+
+@using Microsoft.EntityFrameworkCore
+@using Dashboard.Model
+@inject IDbContextFactory<Dashboard.Connect.DashboardDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>TodoList</h4>
+    <hr />
+    @if (todolist is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@todolist.UserId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">TodoDue</dt>
+            <dd class="col-sm-10">@todolist.TodoDue</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Title</dt>
+            <dd class="col-sm-10">@todolist.Title</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@todolist.Description</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@todolist.DateCreated</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">isDone</dt>
+            <dd class="col-sm-10">@todolist.isDone</dd>
+        </dl>
+        <EditForm method="post" Model="todolist" OnValidSubmit="DeleteTodoList" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(todolist is null)">Delete</button> |
+            <a href="/todolists">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    TodoList? todolist;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        todolist = await context.TodoLists.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (todolist is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    public async Task DeleteTodoList()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.TodoLists.Remove(todolist!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/todolists");
+    }
+}

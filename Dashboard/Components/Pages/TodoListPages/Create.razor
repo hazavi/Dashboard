@@ -1,0 +1,71 @@
+﻿@page "/todolists/create"
+
+@using Microsoft.EntityFrameworkCore
+@using Dashboard.Model
+@inject IDbContextFactory<Dashboard.Connect.DashboardDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>TodoList</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="TodoList" OnValidSubmit="AddTodoList" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="userid" class="form-label">UserId:</label> 
+                <InputNumber id="userid" @bind-Value="TodoList.UserId" class="form-control" /> 
+                <ValidationMessage For="() => TodoList.UserId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="tododue" class="form-label">TodoDue:</label> 
+                <InputDate id="tododue" @bind-Value="TodoList.TodoDue" class="form-control" /> 
+                <ValidationMessage For="() => TodoList.TodoDue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label> 
+                <InputText id="title" @bind-Value="TodoList.Title" class="form-control" /> 
+                <ValidationMessage For="() => TodoList.Title" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label> 
+                <InputText id="description" @bind-Value="TodoList.Description" class="form-control" /> 
+                <ValidationMessage For="() => TodoList.Description" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="TodoList.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => TodoList.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="isdone" class="form-label">isDone:</label> 
+                <InputCheckbox id="isdone" @bind-Value="TodoList.isDone" class="form-check-input" /> 
+                <ValidationMessage For="() => TodoList.isDone" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/todolists">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public TodoList TodoList { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddTodoList()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.TodoLists.Add(TodoList);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/todolists");
+    }
+}

@@ -5,39 +5,45 @@
 @inject Dashboard.Connect.DashboardDbContext DB
 @inject Dashboard.Services.LoginService loginService
 
-<h1>Profile</h1>
-
 @if (loginService?.IsLoggedIn == true)
 {
-    @if(user != null){
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Profile Details</h4>
-                <p class="card-text"><strong>Username:</strong> @user.Username</p>
-                <p class="card-text"><strong>Email:</strong> @user.Email</p>
+    @if (user != null)
+    {
+        <div class="card mt-4 shadow-sm" style="max-width: 600px; margin: auto;">
+            <div class="row g-0">
+                <!-- Profile Image Section -->
+                <div class="col-md-4 text-center p-3">
+                    <img src="/imgs/cat.PNG" class="img-fluid rounded-circle" alt="Profile Image" />
+                </div>
+                <!-- Profile Details Section -->
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h2 class="card-title">Profile</h2>
+                        <hr />
+                        <p class="card-text"><strong>Username:</strong> @user.Username</p>
+                        <p class="card-text"><strong>Email:</strong> @user.Email</p>
+                    </div>
+                </div>
             </div>
         </div>
+
     }
     else
     {
-        <p>Please Login...</p>
+        <p class="text-center">Loading profile...</p>
     }
-
 }
 else
 {
-    <p>Please Login...</p>
+    <p class="text-center">Please Login...</p>
 }
 
 @code {
-    User? user;
-
-    [SupplyParameterFromQuery]
-    public int Id { get; set; }
+    private User? user;
 
     protected override async Task OnInitializedAsync()
     {
-        if(loginService != null && loginService.IsLoggedIn)
+        if (loginService != null && loginService.IsLoggedIn)
         {
             user = await DB.Users.FirstOrDefaultAsync(m => m.Id == loginService.Id);
 
@@ -50,7 +56,5 @@ else
         {
             Nav.NavigateTo("/login");
         }
-
-        
     }
 }

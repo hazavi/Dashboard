@@ -1,0 +1,32 @@
+﻿@page "/todo"
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Dashboard.Model
+@using Dashboard.Connect
+@inject Dashboard.Connect.DashboardDbContext DB
+
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="todolists/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DB.TodoLists">
+    <PropertyColumn Property="todolist => todolist.UserId" />
+    <PropertyColumn Property="todolist => todolist.TodoDue" />
+    <PropertyColumn Property="todolist => todolist.Title" />
+    <PropertyColumn Property="todolist => todolist.Description" />
+    <PropertyColumn Property="todolist => todolist.DateCreated" />
+    <PropertyColumn Property="todolist => todolist.isDone" />
+
+    <TemplateColumn Context="todolist">
+        <a href="@($"todolists/edit?id={todolist.Id}")">Edit</a> |
+        <a href="@($"todolists/details?id={todolist.Id}")">Details</a> |
+        <a href="@($"todolists/delete?id={todolist.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+

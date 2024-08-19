@@ -1,0 +1,44 @@
+﻿@page "/weather"
+@using Dashboard.Services
+@inject WeatherApiService WeatherApiService
+
+
+<h3>Weather for @city</h3>
+
+@if (weatherData != null)
+{
+    <div>
+        <p>Temperature: @weatherData.RoundedTemperature &deg;C</p>
+        <p>Weather: @weatherData.WeatherMain</p>
+        <p>Description: @weatherData.WeatherDescription</p>
+        <p>Humidity: @weatherData.Humidity %</p>
+        <p>Wind Speed: @weatherData.WindSpeed m/s</p>
+        <p>Timestamp: @weatherData.Timestamp</p>
+    </div>
+}
+else if (loading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <p>No data available. Please try again later.</p>
+}
+
+@code {
+    private WeatherData weatherData;
+    private bool loading;
+    private string city = "Copenhagen";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchWeather();
+    }
+
+    private async Task FetchWeather()
+    {
+        loading = true;
+        weatherData = await WeatherApiService.GetWeatherAsync(city);
+        loading = false;
+    }
+}

@@ -1,25 +1,37 @@
 using Dashboard.Components;
 using Dashboard.Connect;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Dashboard.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Services
+// Register HttpClient with BaseAddress
+builder.Services.AddHttpClient<WeatherApiService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/"); // Base URL for the weather API
+});
+
+// Register other services and configurations
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        builder =>
+        {
+            builder.WithOrigins("https://localhost:7262") // Replace with your Blazor app URL
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddSingleton<LoginService>();
 
-
-
-//Bootstrap
+// Bootstrap
 builder.Services.AddBlazorBootstrap();
 
-
-// Connection string
+// Database context
 builder.Services.AddDbContext<DashboardDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
@@ -27,22 +39,21 @@ builder.Services.AddDbContext<DashboardDbContext>(options =>
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
     app.UseMigrationsEndPoint();
 }
 
+app.UseCors("AllowSpecificOrigins");
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
