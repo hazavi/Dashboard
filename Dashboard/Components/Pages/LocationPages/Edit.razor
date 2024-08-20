@@ -2,7 +2,7 @@
 
 @using Microsoft.EntityFrameworkCore
 @using Dashboard.Model
-@inject IDbContextFactory<Dashboard.Connect.DashboardDbContext> DbFactory
+@inject Dashboard.Connect.DashboardDbContext DB
 @inject NavigationManager NavigationManager
 
 <PageTitle>Edit</PageTitle>
@@ -62,8 +62,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        Location ??= await context.Locations.FirstOrDefaultAsync(m => m.Id == Id);
+        Location = await DB.Locations.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (Location is null)
         {
@@ -71,16 +70,13 @@ else
         }
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateLocation()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Attach(Location!).State = EntityState.Modified;
+        DB.Attach(Location!).State = EntityState.Modified;
 
         try
         {
-            await context.SaveChangesAsync();
+            await DB.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -99,7 +95,6 @@ else
 
     bool LocationExists(int id)
     {
-        using var context = DbFactory.CreateDbContext();
-        return context.Locations.Any(e => e.Id == id);
+        return DB.Locations.Any(e => e.Id == id);
     }
 }

@@ -31,7 +31,6 @@ namespace Dashboard.Connect
                 .WithOne(l => l.User)
                 .HasForeignKey<Location>(l => l.UserId);
 
-            // Configure default value for DateCreated in TodoList
             modelBuilder.Entity<TodoList>()
                 .Property(t => t.DateCreated)
                 .HasDefaultValueSql("GETDATE()");

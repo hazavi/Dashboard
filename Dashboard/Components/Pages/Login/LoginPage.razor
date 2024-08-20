@@ -18,35 +18,41 @@
 }
 else
 {
-    <h1 class="text-center">Login</h1>
+    <div class="login-background">
+        <div class="login-card card shadow-lg">
+            <h1 class="text-center card-header">Login</h1>
 
-    <div class="container w-50">
-        <EditForm Model="user" OnSubmit="Login" FormName="login">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username:</label>
-                <InputText id="username" @bind-Value="user.Username" class="form-control" />
-                <ValidationMessage For="() => user.Username" class="text-danger" />
+            <div class="card-body">
+                <EditForm Model="user" OnSubmit="Login" FormName="login">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username:</label>
+                        <InputText id="username" @bind-Value="user.Username" class="form-control" />
+                        <ValidationMessage For="() => user.Username" class="text-danger" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password:</label>
+                        <InputText id="password" type="password" @bind-Value="user.Password" class="form-control" />
+                        <ValidationMessage For="() => user.Password" class="text-danger" />
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">@errorMessage</div>
+                    }
+
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </EditForm>
             </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Password:</label>
-                <InputText id="password" type="password" @bind-Value="user.Password" class="form-control" />
-                <ValidationMessage For="() => user.Password" class="text-danger" />
-            </div>
-
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="alert alert-danger" role="alert">@errorMessage</div>
-            }
-
-            <button type="submit" class="btn btn-primary w-100">Login</button>
-            <div>
+            <div class="card-footer text-center">
                 <p>No account? <a href="/users/create">Create Account here</a></p>
             </div>
-        </EditForm>
+        </div>
     </div>
+}
 
-    @code {
+@code {
     private User user { get; set; } = new();
     private string errorMessage;
 
@@ -87,6 +93,7 @@ else
             loginService.Id = authenticatedUser.Id;
             loginService.Username = authenticatedUser.Username;
             loginService.IsLoggedIn = true;
+            loginService.ImgURL = authenticatedUser.ProfileImage;
             loginService.IsAdmin = authenticatedUser.Username == "admin";
 
             ToastService.Notify(new(ToastType.Success, $"Logged in successfully."));
@@ -98,6 +105,5 @@ else
         {
             errorMessage = "Invalid username or password. Please try again.";
         }
-    }
     }
 }

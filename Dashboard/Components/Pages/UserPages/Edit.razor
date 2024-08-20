@@ -1,8 +1,8 @@
-﻿@page "/Users/edit"
+﻿@page "/users/edit"
 
 @using Microsoft.EntityFrameworkCore
 @using Dashboard.Model
-@inject IDbContextFactory<Dashboard.Connect.DashboardDbContext> DbFactory
+@inject Dashboard.Connect.DashboardDbContext DB
 @inject NavigationManager NavigationManager
 
 <PageTitle>Edit</PageTitle>
@@ -57,8 +57,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        User ??= await context.Users.FirstOrDefaultAsync(m => m.Id == Id);
+        User ??= await DB.Users.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (User is null)
         {
@@ -66,16 +65,13 @@ else
         }
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateUser()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Attach(User!).State = EntityState.Modified;
+        DB.Attach(User!).State = EntityState.Modified;
 
         try
         {
-            await context.SaveChangesAsync();
+            await DB.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -94,7 +90,6 @@ else
 
     bool UserExists(int id)
     {
-        using var context = DbFactory.CreateDbContext();
-        return context.Users.Any(e => e.Id == id);
+        return DB.Users.Any(e => e.Id == id);
     }
 }

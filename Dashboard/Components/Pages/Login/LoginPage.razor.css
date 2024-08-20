@@ -1,0 +1,67 @@
+﻿/* Background for the login page */
+.login-background {
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh; 
+    outline: none;
+}
+
+/* Card style */
+.login-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    width: 100%;
+    max-width: 400px; /* Max width of the card */
+    border: none;
+
+}
+
+    /* Card shadow */
+    .login-card.card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    }
+
+    /* Card header style */
+    .login-card .card-header {
+        background-color: transparent;
+        border-bottom: none;
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    /* Card body style */
+    .login-card .card-body {
+        padding: 20px;
+    }
+
+    /* Input styling */
+    .login-card .form-control {
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    /* Button styling */
+    .login-card .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 5px;
+        outline: none; 
+    }
+
+    /* Card footer style */
+    .login-card .card-footer {
+        background-color: transparent;
+        border-top: none;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    /* Text alignment */
+    .login-card .text-center {
+        text-align: center;
+    }

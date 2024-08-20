@@ -2,7 +2,7 @@
 
 @using Microsoft.EntityFrameworkCore
 @using Dashboard.Model
-@inject IDbContextFactory<Dashboard.Connect.DashboardDbContext> DbFactory
+@inject Dashboard.Connect.DashboardDbContext DB
 @inject NavigationManager NavigationManager
 
 <PageTitle>Details</PageTitle>
@@ -16,7 +16,8 @@
     {
         <p><em>Loading...</em></p>
     }
-    else {
+    else
+    {
         <dl class="row">
             <dt class="col-sm-2">Username</dt>
             <dd class="col-sm-10">@user.Username</dd>
@@ -40,8 +41,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        user = await context.Users.FirstOrDefaultAsync(m => m.Id == Id);
+        user = await DB.Users.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (user is null)
         {

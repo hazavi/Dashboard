@@ -14,9 +14,13 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="card shadow-sm">
                         <!-- Profile Image Section -->
-                        <div class="card-header text-center">
-                            <img src="/imgs/cat.PNG" class="img-fluid rounded-circle" alt="Profile Image" style="width: 120px; height: 120px; object-fit: cover;" />
+                        <div class="card-header text-center profile-image-container">
+                            <img src="@user.DisplayProfileImage" class="img-fluid rounded-circle profile-image" alt="Profile Image" style="width: 120px; height: 120px; object-fit: cover;" />
+                            <div class="overlay" >
+                                <button class="btn btn-light" @onclick="ToggleImageSelection">Change Image</button>
+                            </div>
                         </div>
+
                         <!-- Profile Details Section -->
                         <div class="card-body text-center">
                             <h2 class="card-title mb-3">Profile</h2>
@@ -37,7 +41,9 @@
                             {
                                 <!-- Button to add location -->
                                 <div class="mt-4">
-                                    <a href="/locations/create/@user.Id" class="btn btn-primary">Add Location</a>
+                                    <a href="/locations/create/@user.Id" class="btn btn-light" style="color:#0085FF; font-weight:bold;">
+                                        Add Location
+                                        </a>
                                 </div>
                             }
                         </div>
@@ -45,6 +51,22 @@
                 </div>
             </div>
         </div>
+
+        @if (isImageSelectionVisible)
+        {
+            <div class="image-selection-modal">
+                <div class="image-selection-content">
+                    <h5>Select a Profile Image</h5>
+                    <div class="image-list">
+                        @foreach (var imageUrl in availableImages)
+                        {
+                            <img src="@imageUrl" class="img-thumbnail selectable-image" @onclick="() => ChangeProfileImage(imageUrl)" />
+                        }
+                    </div>
+                    <button class="btn btn-secondary mt-3" @onclick="CloseImageSelection">Close</button>
+                </div>
+            </div>
+        }
     }
     else
     {
@@ -62,13 +84,29 @@ else
 
 @code {
     private User? user;
+    private bool isImageSelectionVisible = false;
+    private List<string> availableImages = new List<string>
+    {
+        "/imgs/pfp.jpg",
+        "/imgs/pfp1.PNG",
+        "/imgs/pfp2.png",
+        "/imgs/pfp3.jpg",
+        "/imgs/pfp4.png",
+        "/imgs/pfp5.jpg",
+        "/imgs/pfp6.jpg",
+        "/imgs/pfp7.jpg",
+        "/imgs/pfp8.jpg",
+        "/imgs/pfp9.png",
+        "/imgs/pfp10.png",
+        "/imgs/pfp11.png",
+    };
 
     protected override async Task OnInitializedAsync()
     {
         if (loginService != null && loginService.IsLoggedIn)
         {
             user = await DB.Users
-                .Include(u => u.Location) // Eagerly load the Location property
+                .Include(u => u.Location)
                 .FirstOrDefaultAsync(m => m.Id == loginService.Id);
 
             if (user == null)
@@ -81,4 +119,31 @@ else
             Nav.NavigateTo("/login");
         }
     }
+
+    private void ToggleImageSelection()
+    {
+        isImageSelectionVisible = !isImageSelectionVisible;
+    }
+
+    private void CloseImageSelection()
+    {
+        isImageSelectionVisible = false;
+    }
+
+    private async Task ChangeProfileImage(string imageUrl)
+    {
+        if (user != null)
+        {
+            user.ProfileImage = imageUrl;
+            await DB.SaveChangesAsync();
+            isImageSelectionVisible = false;
+
+            // Update the ImgURL in loginService
+            loginService.ImgURL = imageUrl;
+
+            // Force reload the page to reflect the updated profile image
+            Nav.NavigateTo(Nav.Uri, true);
+        }
+    }
+
 }

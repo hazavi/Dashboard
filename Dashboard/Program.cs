@@ -5,11 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register HttpClient with BaseAddress
-builder.Services.AddHttpClient<WeatherApiService>(client =>
-{
-    client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/"); // Base URL for the weather API
-});
+//Services
 
 // Register other services and configurations
 builder.Services.AddCors(options =>
@@ -22,6 +18,13 @@ builder.Services.AddCors(options =>
                    .AllowAnyMethod();
         });
 });
+
+// WeatherAPI
+builder.Services.AddHttpClient<WeatherApiService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/"); 
+});
+
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();

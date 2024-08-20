@@ -17,6 +17,8 @@ namespace Dashboard.Model
         [Required(ErrorMessage = "Please provide an Email")]
         [StringLength(100)]
         public string Email { get; set; }
+        public string? ProfileImage { get; set; }
+        public string DisplayProfileImage => string.IsNullOrEmpty(ProfileImage) ? "/imgs/pfp.jpg" : ProfileImage;
 
         public Location Location { get; set; }
 

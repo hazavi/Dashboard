@@ -1,8 +1,8 @@
-﻿@page "/TodoLists/edit"
+﻿@page "/todoLists/edit"
 
 @using Microsoft.EntityFrameworkCore
 @using Dashboard.Model
-@inject IDbContextFactory<Dashboard.Connect.DashboardDbContext> DbFactory
+@inject Dashboard.Connect.DashboardDbContext DB
 @inject NavigationManager NavigationManager
 
 <PageTitle>Edit</PageTitle>
@@ -43,11 +43,7 @@ else
                     <InputText id="description" @bind-Value="TodoList.Description" class="form-control" />
                     <ValidationMessage For="() => TodoList.Description" class="text-danger" />
                 </div>
-                <div class="mb-3">
-                    <label for="datecreated" class="form-label">DateCreated:</label>
-                    <InputDate id="datecreated" @bind-Value="TodoList.DateCreated" class="form-control" />
-                    <ValidationMessage For="() => TodoList.DateCreated" class="text-danger" />
-                </div>
+
                 <div class="mb-3">
                     <label for="isdone" class="form-label">isDone:</label>
                     <InputCheckbox id="isdone" @bind-Value="TodoList.isDone" class="form-check-input" />
@@ -60,7 +56,7 @@ else
 }
 
 <div>
-    <a href="/todolists">Back to List</a>
+    <a href="/todo">Back to List</a>
 </div>
 
 @code {
@@ -72,8 +68,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        TodoList ??= await context.TodoLists.FirstOrDefaultAsync(m => m.Id == Id);
+        TodoList ??= await DB.TodoLists.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (TodoList is null)
         {
@@ -85,12 +80,11 @@ else
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateTodoList()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Attach(TodoList!).State = EntityState.Modified;
+        DB.Attach(TodoList!).State = EntityState.Modified;
 
         try
         {
-            await context.SaveChangesAsync();
+            await DB.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -104,12 +98,11 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/todolists");
+        NavigationManager.NavigateTo("/todo");
     }
 
     bool TodoListExists(int id)
     {
-        using var context = DbFactory.CreateDbContext();
-        return context.TodoLists.Any(e => e.Id == id);
+        return DB.TodoLists.Any(e => e.Id == id);
     }
 }
