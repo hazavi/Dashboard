@@ -52,6 +52,12 @@
                                 <span class="oi oi-brush @GetColorSelectorIcon(todo.Id)" aria-hidden="true"></span>
                             </button>
                         }
+
+                        <!-- Pin/Unpin Button -->
+                        <button class="pinbtn btn btn-info" @onclick="() => TogglePin(todo)">
+                            <Icon Name="@(todo.IsPinned ? IconName.PinFill : IconName.Pin)" Size="IconSize.x5" />
+                        </button>
+
                         <a href="@($"/todolists/details?id=" + todo.Id)" class="viewbtn btn btn-primary">
                             <Icon Name="IconName.EyeFill" Size="IconSize.x5" />
                         </a>
@@ -147,5 +153,31 @@ else
         {
             colorSelectors[item.Id] = false;
         }
+    }
+
+    private async Task TogglePin(TodoList todo)
+    {
+        // Unpin any other pinned to-do items
+        var pinnedTodo = await DB.TodoLists
+            .Where(t => t.UserId == loginService.Id && t.IsPinned)
+            .FirstOrDefaultAsync();
+
+        if (pinnedTodo != null && pinnedTodo.Id != todo.Id)
+        {
+            pinnedTodo.IsPinned = false;
+            DB.TodoLists.Update(pinnedTodo);
+        }
+
+        // Toggle pin state
+        todo.IsPinned = !todo.IsPinned;
+        DB.TodoLists.Update(todo);
+
+        // Save changes to the database
+        await DB.SaveChangesAsync();
+
+        // Refresh the to-do list
+        todos = await DB.TodoLists
+            .Where(t => t.UserId == loginService.Id)
+            .ToListAsync();
     }
 }

@@ -5,18 +5,18 @@ using Microsoft.Extensions.Configuration;
 
 namespace Dashboard.Services
 {
-    public class NewsDataService
+    public class NewsService
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
-        public NewsDataService(HttpClient httpClient, IConfiguration configuration)
+        public NewsService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _apiKey = "pub_5139706630665ef913c59b36433a793f18509";
         }
 
-        public async Task<NewsDataResponse> GetTopNewsAsync()
+        public async Task<NewsResponse> GetTopNewsAsync()
         {
             var url = $"https://newsdata.io/api/1/latest?apikey={_apiKey}&language=en&category=world&timezone=Europe/Berlin&removeduplicate=1&size=10&prioritydomain=top&domain=bbc";
 
@@ -25,7 +25,7 @@ namespace Dashboard.Services
                 var response = await _httpClient.GetStringAsync(url);
                 Console.WriteLine(response); // Log response for debugging
 
-                var newsResponse = JsonConvert.DeserializeObject<NewsDataResponse>(response);
+                var newsResponse = JsonConvert.DeserializeObject<NewsResponse>(response);
                 return newsResponse;
             }
             catch (HttpRequestException e)
@@ -36,17 +36,17 @@ namespace Dashboard.Services
     }
 
     // Response model
-    public class NewsDataResponse
+    public class NewsResponse
     {
         public string Status { get; set; }
         public int TotalResults { get; set; }
 
         [JsonProperty("results")]
-        public NewsDataItem[] Results { get; set; }
+        public NewsItem[] Results { get; set; }
     }
 
     // News item model
-    public class NewsDataItem
+    public class NewsItem
     {
         public string ArticleId { get; set; }
         public string Title { get; set; }

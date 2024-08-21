@@ -1,0 +1,76 @@
+﻿@page "/pinned-todo"
+@using Dashboard.Model
+@using Dashboard.Connect
+@using Microsoft.EntityFrameworkCore
+@inject Dashboard.Connect.DashboardDbContext DB
+@inject Dashboard.Services.LoginService loginService
+
+
+@if (loginService.IsLoggedIn)
+{
+    if (pinnedTodo == null)
+    {
+        <p>No pinned to-do item found.</p>
+    }
+    else
+    {
+        <div class="pinned-todo-item sticky-note @GetNoteCssClass(pinnedTodo)" style="background-color: @(pinnedTodo.isDone ? "#ccc" : pinnedTodo.Color); --sticky-note-border-color: @(pinnedTodo.isDone ? "#999" : pinnedTodo.Color);">
+            <div class="title">
+                <h3>@pinnedTodo.Title</h3>
+            </div>
+            <div class="text">
+                @((MarkupString)pinnedTodo.Description)
+            </div>
+            <div class="isDone">
+                <span class="progress-circle-dot @GetCircleDotColor(pinnedTodo.isDone)"></span>
+                <span>@(pinnedTodo.isDone ? "Done" : "Not Done")</span>
+            </div>
+            <div class="actions">
+                <a href="@($"/todolists/details?id=" + pinnedTodo.Id)" class="btn btn-primary">View</a>
+                <a href="@($"/todolists/edit?id=" + pinnedTodo.Id)" class="btn btn-warning">Edit</a>
+                <a href="#" class="btn btn-secondary" @onclick="UnpinTodo">Unpin</a>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p>You have to <a href="/login">log in</a>.</p>
+}
+
+@code {
+    private TodoList? pinnedTodo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (loginService.IsLoggedIn)
+        {
+            var userId = loginService.Id;
+
+            // Fetch the pinned to-do item asynchronously
+            pinnedTodo = await DB.TodoLists
+                .FirstOrDefaultAsync(t => t.UserId == userId && t.IsPinned);
+        }
+    }
+
+    private async Task UnpinTodo()
+    {
+        if (pinnedTodo != null)
+        {
+            pinnedTodo.IsPinned = false;
+            DB.TodoLists.Update(pinnedTodo);
+            await DB.SaveChangesAsync();
+            pinnedTodo = null;
+        }
+    }
+
+    private string GetCircleDotColor(bool isDone)
+    {
+        return isDone ? "red" : "green";
+    }
+
+    private string GetNoteCssClass(TodoList item)
+    {
+        return item.isDone ? "done" : "";
+    }
+}

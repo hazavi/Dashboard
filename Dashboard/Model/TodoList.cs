@@ -17,6 +17,7 @@ namespace Dashboard.Model
         public bool isDone { get; set; }
 
         public string? Color { get; set; } = "#ffd700";
+        public bool IsPinned { get; set; }
 
         [ForeignKey("UserId")]
         public User User { get; set; }

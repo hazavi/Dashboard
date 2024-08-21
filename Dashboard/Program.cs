@@ -18,17 +18,12 @@ builder.Services.AddCors(options =>
 });
 
 // NewsAPI Configuration
-builder.Services.AddHttpClient<NewsService>(client =>
-{
-    client.BaseAddress = new Uri("https://api.worldnewsapi.com");
-});
-builder.Services.AddSingleton<NewsService>();
 
-builder.Services.AddHttpClient<NewsDataService>(client =>
+builder.Services.AddHttpClient<NewsService>(client =>
 {
     client.BaseAddress = new Uri("https://newsdata.io");
 });
-builder.Services.AddSingleton<NewsDataService>();
+builder.Services.AddSingleton<NewsService>();
 
 
 // WeatherAPI Configuration

@@ -1,7 +1,5 @@
-﻿@page "/worlds-news"
+﻿@page "/news"
 @inject Dashboard.Services.NewsService NewsService
-
-<h3 class="news-title">Top 10 World News</h3>
 
 @if (newsItems == null)
 {
@@ -14,16 +12,20 @@ else if (newsItems.Length == 0)
 else
 {
     <div class="news-container">
-        @foreach (var newsItem in newsItems.Take(10))
+        @foreach (var item in newsItems)
         {
             <div class="news-item">
-                <h4>@newsItem.Title</h4>
-                @if (!string.IsNullOrEmpty(newsItem.ImageUrl))
+                <h4>@item.Title</h4>
+                @if (!string.IsNullOrEmpty(item.ImageUrlToShow))
                 {
-                    <img src="@newsItem.ImageUrl" alt="News Image" class="news-image" />
+                    <img src="@item.ImageUrlToShow" alt="News Image" class="news-image" />
                 }
-                <p>@newsItem.Summary</p>
-                <a href="@newsItem.Url" target="_blank" class="news-link">Read more</a>
+                else
+                {
+                    <p>No image available.</p>
+                }
+                <p>@item.Description</p>
+                <a href="@item.Link" target="_blank">Read more</a>
             </div>
         }
     </div>
@@ -37,9 +39,15 @@ else
         try
         {
             var response = await NewsService.GetTopNewsAsync();
-            if (response?.TopNews != null && response.TopNews.Length > 0)
+            if (response?.Results != null && response.Results.Length > 0)
             {
-                newsItems = response.TopNews[0].News ?? Array.Empty<NewsItem>();
+                newsItems = response.Results;
+
+                // Log each image URL to verify
+                foreach (var item in newsItems)
+                {
+                    Console.WriteLine($"Image URL: {item.ImageUrl}");
+                }
             }
             else
             {
@@ -52,4 +60,6 @@ else
             newsItems = Array.Empty<NewsItem>();
         }
     }
+
+
 }
