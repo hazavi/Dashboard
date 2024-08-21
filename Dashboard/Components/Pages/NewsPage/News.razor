@@ -1,0 +1,55 @@
+﻿@page "/worlds-news"
+@inject Dashboard.Services.NewsService NewsService
+
+<h3 class="news-title">Top 10 World News</h3>
+
+@if (newsItems == null)
+{
+    <p>Loading...</p>
+}
+else if (newsItems.Length == 0)
+{
+    <p>No news items available.</p>
+}
+else
+{
+    <div class="news-container">
+        @foreach (var newsItem in newsItems.Take(10))
+        {
+            <div class="news-item">
+                <h4>@newsItem.Title</h4>
+                @if (!string.IsNullOrEmpty(newsItem.ImageUrl))
+                {
+                    <img src="@newsItem.ImageUrl" alt="News Image" class="news-image" />
+                }
+                <p>@newsItem.Summary</p>
+                <a href="@newsItem.Url" target="_blank" class="news-link">Read more</a>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private NewsItem[] newsItems = Array.Empty<NewsItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await NewsService.GetTopNewsAsync();
+            if (response?.TopNews != null && response.TopNews.Length > 0)
+            {
+                newsItems = response.TopNews[0].News ?? Array.Empty<NewsItem>();
+            }
+            else
+            {
+                newsItems = Array.Empty<NewsItem>();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching news: {ex.Message}");
+            newsItems = Array.Empty<NewsItem>();
+        }
+    }
+}

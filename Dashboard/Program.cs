@@ -5,9 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Services
-
-// Register other services and configurations
+// Services Configuration
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
@@ -19,33 +17,53 @@ builder.Services.AddCors(options =>
         });
 });
 
-// WeatherAPI
+// NewsAPI Configuration
+builder.Services.AddHttpClient<NewsService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.worldnewsapi.com");
+});
+builder.Services.AddSingleton<NewsService>();
+
+builder.Services.AddHttpClient<NewsDataService>(client =>
+{
+    client.BaseAddress = new Uri("https://newsdata.io");
+});
+builder.Services.AddSingleton<NewsDataService>();
+
+
+// WeatherAPI Configuration
 builder.Services.AddHttpClient<WeatherApiService>(client =>
 {
-    client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/"); 
+    client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/");
+    // Optionally add other default headers or configurations
 });
 
-
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+// Register services
 builder.Services.AddScoped<UserService>();
 builder.Services.AddSingleton<LoginService>();
 
-// Bootstrap
+// Bootstrap and Blazor Components
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
-// Database context
+// Database Context Configuration
 builder.Services.AddDbContext<DashboardDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
 
+// Add QuickGrid Entity Framework Adapter
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
