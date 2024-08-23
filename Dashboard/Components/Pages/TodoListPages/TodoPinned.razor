@@ -43,12 +43,20 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadPinnedTodoAsync();
+    }
+
+    private async Task LoadPinnedTodoAsync()
+    {
         if (loginService.IsLoggedIn)
         {
             var userId = loginService.Id;
 
-            // Fetch the pinned to-do item asynchronously
+            // Ensure only one operation at a time on DbContext instance
+            await Task.Delay(10);  // Optional: tiny delay to ensure previous context use is complete
+
             pinnedTodo = await DB.TodoLists
+                .AsNoTracking()  // Add AsNoTracking if you don't plan to update the entity
                 .FirstOrDefaultAsync(t => t.UserId == userId && t.IsPinned);
         }
     }
@@ -58,8 +66,13 @@ else
         if (pinnedTodo != null)
         {
             pinnedTodo.IsPinned = false;
+
             DB.TodoLists.Update(pinnedTodo);
+
+            // Wait for the update operation to complete before proceeding
             await DB.SaveChangesAsync();
+
+            // Clear the pinnedTodo after saving
             pinnedTodo = null;
         }
     }

@@ -1,0 +1,105 @@
+﻿@page "/calendar"
+@inject Dashboard.Services.CalendarService CalendarService
+
+<div class="calendar-controls">
+    <button @onclick="ShowPreviousMonth">Previous</button>
+    <button @onclick="ShowCurrentMonth">Current Month</button>
+    <button @onclick="ShowNextMonth">Next</button>
+</div>
+
+@if (holidays == null)
+{
+    <p><em>Loading holidays...</em></p>
+}
+else
+{
+    <div class="calendar-container">
+        <div class="calendar-month">
+            <h3>@currentMonth.ToString("MMMM yyyy")</h3>
+            <div class="calendar-grid">
+                @* Display day headers *@
+                <div class="calendar-day-header">Sun</div>
+                <div class="calendar-day-header">Mon</div>
+                <div class="calendar-day-header">Tue</div>
+                <div class="calendar-day-header">Wed</div>
+                <div class="calendar-day-header">Thu</div>
+                <div class="calendar-day-header">Fri</div>
+                <div class="calendar-day-header">Sat</div>
+
+                @* Add empty cells for days before the first day of the month *@
+                @{
+                    var firstDayOfMonth = new DateTime(currentMonth.Year, currentMonth.Month, 1);
+                    var paddingDays = (int)firstDayOfMonth.DayOfWeek;
+                }
+                @for (int i = 0; i < paddingDays; i++)
+                {
+                    <div class="calendar-day empty"></div>
+                }
+
+                @* Display days with holidays *@
+                @for (int day = 1; day <= DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month); day++)
+                {
+                    var currentDate = new DateTime(currentMonth.Year, currentMonth.Month, day);
+                    var holiday = holidays.FirstOrDefault(h => h.Date.Iso == currentDate.ToString("yyyy-MM-dd"));
+
+                    <div class="calendar-day @GetDayCssClass(currentDate)">
+                        <span>@day</span>
+                        @if (holiday != null)
+                        {
+                            <div class="holiday-info">
+                                <strong>@holiday.Name</strong>
+                                <p>@holiday.Description</p>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private DateTime currentMonth;
+    private List<Holiday>? holidays;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentMonth = DateTime.Now;
+        await LoadHolidaysAsync();
+    }
+
+    private async Task LoadHolidaysAsync()
+    {
+        holidays = await CalendarService.GetHolidaysAsync();
+        Console.WriteLine($"Loaded holidays: {holidays.Count}");
+
+        // Debugging: Check if holidays have been loaded correctly
+        foreach (var holiday in holidays)
+        {
+            Console.WriteLine($"Holiday: {holiday.Name} on {holiday.Date.Iso}");
+        }
+    }
+
+    private async Task ShowPreviousMonth()
+    {
+        currentMonth = currentMonth.AddMonths(-1);
+        await LoadHolidaysAsync();
+    }
+
+    private async Task ShowCurrentMonth()
+    {
+        currentMonth = DateTime.Now;
+        await LoadHolidaysAsync();
+    }
+
+    private async Task ShowNextMonth()
+    {
+        currentMonth = currentMonth.AddMonths(1);
+        await LoadHolidaysAsync();
+    }
+
+    private string GetDayCssClass(DateTime date)
+    {
+        return date.Date == DateTime.Now.Date ? "today" : "";
+    }
+}

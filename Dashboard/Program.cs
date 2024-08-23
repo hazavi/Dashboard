@@ -17,6 +17,11 @@ builder.Services.AddCors(options =>
         });
 });
 
+//Calendar API
+builder.Services.AddHttpClient<CalendarService>();
+builder.Services.AddScoped<CalendarService>();
+
+
 // NewsAPI Configuration
 
 builder.Services.AddHttpClient<NewsService>(client =>
