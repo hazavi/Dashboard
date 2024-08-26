@@ -15,9 +15,14 @@
 
 @if (!loginService.IsLoggedIn)
 {
-    <p class="login-message">Login to Personalize your Dashboard!</p>
+    <div class="notlogin-container">
+        <p class="login-message">Login to Personalize your Dashboard!</p>
 
-    <LoginPage/>
+        <LoginPage />
+
+
+    </div>
+
 }
 else
 {

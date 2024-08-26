@@ -6,17 +6,15 @@
     padding: 20px;
     justify-content: center; /* Center widgets horizontally */
 }
+.notlogin-container {
+    display: flex;
+    flex-direction: column; /* Align children vertically */
+    justify-content: center; /* Center vertically */
+    text-align: center; /* Center text inside the paragraph */
+}
 .login-message {
-    text-align: center; /* Centers text horizontally */
-    margin: 0; /* Reset margin to ensure proper centering */
-    position: absolute; /* Allows for precise positioning */
-    left: 50%; /* Positions the left of the element at 50% of the container width */
-    transform: translate(-43%, -50%); /* Adjusts the position to center the element */
-    width: 100%; /* Ensure the width of the container is used for centering */
-    font-weight:bold;
-    font-size:1em;
+    font-size: 1.1rem; 
     color:red;
-
 }
 
 /* Each widget container */
