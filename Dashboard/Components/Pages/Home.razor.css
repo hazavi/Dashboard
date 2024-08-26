@@ -46,11 +46,10 @@
 
 /* Remove button */
 .remove-btn {
-    background: #ff4d4d;
+    background-color:transparent;
     border: none;
     color: white;
     padding: 5px;
-    border-radius: 50%;
     cursor: pointer;
     font-size: 14px;
     width: 24px;
@@ -64,6 +63,7 @@
     opacity: 0; /* Initially hidden */
     transition: opacity 0.2s ease-in-out; /* Smooth opacity transition */
 }
+
 
 /* Show remove button only on hover */
 .widget-container:hover .widget-header,

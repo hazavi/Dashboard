@@ -42,7 +42,9 @@ else
             <div class="widget-container">
                 <div class="widget-header">
                     <h2>Calendar</h2>
-                    <button class="remove-btn" @onclick="RemoveCalendar">X</button>
+                    <button class="remove-btn" @onclick="RemoveCalendar">
+                        <Icon Name="IconName.ArrowRight" Size="IconSize.x6" Style=" color: #000;" />
+                    </button>
                 </div>
                 <Calendar />
             </div>
@@ -52,7 +54,9 @@ else
             <div class="widget-container">
                 <div class="widget-header">
                     <h2>News</h2>
-                    <button class="remove-btn" @onclick="RemoveNews">X</button>
+                    <button class="remove-btn" @onclick="RemoveNews">
+                        <Icon Name="IconName.XLg" Size="IconSize.x3" Style=" color: red; " />
+                    </button>
                 </div>
                 <News />
             </div>
