@@ -32,7 +32,9 @@ else
             <div class="widget-container">
                 <div class="widget-header">
                     <h2>Weather</h2>
-                    <button class="remove-btn" @onclick="RemoveWeather">X</button>
+                    <button class="remove-btn" @onclick="RemoveWeather">
+                        <Icon Name="IconName.XLg" Size="IconSize.x3" Style=" color: red; " />
+                    </button>
                 </div>
                 <Weather />
             </div>
@@ -43,7 +45,7 @@ else
                 <div class="widget-header">
                     <h2>Calendar</h2>
                     <button class="remove-btn" @onclick="RemoveCalendar">
-                        <Icon Name="IconName.ArrowRight" Size="IconSize.x6" Style=" color: #000;" />
+                        <Icon Name="IconName.XLg" Size="IconSize.x3" Style=" color: red; " />
                     </button>
                 </div>
                 <Calendar />
@@ -66,7 +68,9 @@ else
             <div class="widget-container">
                 <div class="widget-header">
                     <h2>Todo</h2>
-                    <button class="remove-btn" @onclick="RemoveTodo">X</button>
+                    <button class="remove-btn" @onclick="RemoveTodo">
+                        <Icon Name="IconName.XLg" Size="IconSize.x3" Style=" color: red; " />
+                    </button>
                 </div>
                 <TodoPinned />
             </div>
@@ -95,11 +99,11 @@ else
     private bool showTodo = false;
     private bool showCalendar = false;
     private bool showControlPanel = false;
-    private int userId; // Change to int
+    private int userId; 
 
     protected override async Task OnInitializedAsync()
     {
-        userId = loginService.Id; // Replace with a valid user ID
+        userId = loginService.Id; 
 
         var state = await DB.GetDashboardStateAsync(userId);
         if (state != null)
@@ -110,8 +114,6 @@ else
             showCalendar = state.ShowCalendar;
         }
     }
-
-
 
 
     private async Task SaveDashboardState()

@@ -76,5 +76,14 @@
             </NavLink>
         </div>
 
+        @if (loginService.IsLoggedIn && loginService.IsAdmin)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="admin">
+                    <Icon Name="IconName.PersonFillGear" Size="IconSize.x4" Style="margin-right: 10px;" /> admin
+                </NavLink>
+            </div>
+        }
+
     </nav>
 </div>

@@ -94,12 +94,12 @@ else
             loginService.Username = authenticatedUser.Username;
             loginService.IsLoggedIn = true;
             loginService.ImgURL = authenticatedUser.ProfileImage;
-            loginService.IsAdmin = authenticatedUser.Username == "admin";
+            loginService.IsAdmin = authenticatedUser.Id == 1 && authenticatedUser.Username == "admin";
 
             ToastService.Notify(new(ToastType.Success, $"Logged in successfully."));
 
             await Task.Delay(500);
-            Nav.NavigateTo($"/", true); // true parameter forces a full page reload
+            Nav.NavigateTo($"/", true); 
         }
         else
         {
