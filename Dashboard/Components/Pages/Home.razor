@@ -1,97 +1,175 @@
 ﻿@page "/"
-@using Dashboard.Components.Pages.WeatherPage
+@using Dashboard.Components.Pages.CalendarPage
 @using Dashboard.Components.Pages.NewsPage
+@using Dashboard.Components.Pages.WeatherPage
 @using Dashboard.Components.Pages.TodoListPages
+@using Dashboard.Components.Pages.Login
+@using Microsoft.AspNetCore.Components.Authorization
+@using Dashboard.Model
+@inject DashboardDbContext DB
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Dashboard.Services.LoginService loginService
 
 <PageTitle>Home</PageTitle>
 
-<h1><strong>Dashboard</strong></h1>
 
-<div class="dashboard-container">
-    @if (showWeather)
-    {
-        <div class="widget-container">
-            <div class="widget-header">
-                <h2>Weather</h2>
-                <button class="remove-btn" @onclick="RemoveWeather">X</button>
-            </div>
-            <Weather />
-        </div>
-    }
-
-    @if (showNews)
-    {
-        <div class="widget-container">
-            <div class="widget-header">
-                <h2>News</h2>
-                <button class="remove-btn" @onclick="RemoveNews">X</button>
-            </div>
-            <News />
-        </div>
-    }
-    @if (showTodo)
-    {
-        <div class="widget-container">
-            <div class="widget-header">
-                <h2>Todo</h2>
-                <button class="remove-btn" @onclick="RemoveTodo">X</button>
-            </div>
-            <TodoPinned />
-        </div>
-    }
-</div>
-
-<div class="floating-controls" @onclick="ToggleControlPanel">
-@*     <p style="margin-top:10px;">+</p>*@
-    <Icon Name="IconName.Plus" Size="IconSize.x3" Style=""  />
-
-</div>
-
-@if (showControlPanel)
+@if (!loginService.IsLoggedIn)
 {
-    <div class="control-panel">
-        <button class="add-btn" @onclick="AddWeather">Add Weather</button>
-        <button class="add-btn" @onclick="AddNews">Add News</button>
-        <button class="add-btn" @onclick="AddTodo">Add Todo</button>
+    <p class="login-message">Login to Personalize your Dashboard!</p>
+
+    <LoginPage/>
+}
+else
+{
+    <div class="dashboard-container">
+        @if (showWeather)
+        {
+            <div class="widget-container">
+                <div class="widget-header">
+                    <h2>Weather</h2>
+                    <button class="remove-btn" @onclick="RemoveWeather">X</button>
+                </div>
+                <Weather />
+            </div>
+        }
+        @if (showCalendar)
+        {
+            <div class="widget-container">
+                <div class="widget-header">
+                    <h2>Calendar</h2>
+                    <button class="remove-btn" @onclick="RemoveCalendar">X</button>
+                </div>
+                <Calendar />
+            </div>
+        }
+        @if (showNews)
+        {
+            <div class="widget-container">
+                <div class="widget-header">
+                    <h2>News</h2>
+                    <button class="remove-btn" @onclick="RemoveNews">X</button>
+                </div>
+                <News />
+            </div>
+        }
+        @if (showTodo)
+        {
+            <div class="widget-container">
+                <div class="widget-header">
+                    <h2>Todo</h2>
+                    <button class="remove-btn" @onclick="RemoveTodo">X</button>
+                </div>
+                <TodoPinned />
+            </div>
+        }
     </div>
+
+    <div class="floating-controls" @onclick="ToggleControlPanel">
+        <Icon Name="IconName.Plus" Size="IconSize.x3" Style="" />
+    </div>
+
+    @if (showControlPanel)
+    {
+        <div class="control-panel">
+            <button class="add-btn" @onclick="AddWeather">Add Weather</button>
+            <button class="add-btn" @onclick="AddNews">Add News</button>
+            <button class="add-btn" @onclick="AddTodo">Add Todo</button>
+            <button class="add-btn" @onclick="AddCalendar">Add Calendar</button>
+        </div>
+    }
 }
 
-@code {
-    private bool showWeather = true;
-    private bool showNews = true;
-    private bool showTodo = true;
-    private bool showControlPanel = false;
 
-    private void RemoveWeather()
+@code {
+    private bool showWeather = false;
+    private bool showNews = false;
+    private bool showTodo = false;
+    private bool showCalendar = false;
+    private bool showControlPanel = false;
+    private int userId; // Change to int
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = loginService.Id; // Replace with a valid user ID
+
+        var state = await DB.GetDashboardStateAsync(userId);
+        if (state != null)
+        {
+            showWeather = state.ShowWeather;
+            showNews = state.ShowNews;
+            showTodo = state.ShowTodo;
+            showCalendar = state.ShowCalendar;
+        }
+    }
+
+
+
+
+    private async Task SaveDashboardState()
+    {
+        var state = new DashboardState
+            {
+                UserId = userId,
+                ShowWeather = showWeather,
+                ShowNews = showNews,
+                ShowTodo = showTodo,
+                ShowCalendar = showCalendar
+            };
+
+        await DB.SaveDashboardStateAsync(state);
+    }
+
+    private async Task RemoveWeather()
     {
         showWeather = false;
+        await SaveDashboardState();
     }
 
-    private void RemoveNews()
+    private async Task RemoveCalendar()
+    {
+        showCalendar = false;
+        await SaveDashboardState();
+    }
+
+    private async Task RemoveNews()
     {
         showNews = false;
+        await SaveDashboardState();
     }
-    private void RemoveTodo()
+
+    private async Task RemoveTodo()
     {
         showTodo = false;
+        await SaveDashboardState();
     }
 
-    private void AddWeather()
+    private async Task AddWeather()
     {
         showWeather = true;
-        showControlPanel = false; 
+        showControlPanel = false;
+        await SaveDashboardState();
     }
 
-    private void AddNews()
+    private async Task AddCalendar()
     {
-        showNews = true;
-        showControlPanel = false; 
+        showCalendar = true;
+        showControlPanel = false;
+        await SaveDashboardState();
     }
-    
-    private void AddTodo()
+
+    private async Task AddNews()
     {
         showNews = true;
-        showControlPanel = false; 
+        showControlPanel = false;
+        await SaveDashboardState();
+    }
+
+    private async Task AddTodo()
+    {
+        showTodo = true;
+        showControlPanel = false;
+        await SaveDashboardState();
+
     }
 
     private void ToggleControlPanel()

@@ -12,14 +12,24 @@ main {
 .sidebar {
     background-color: #023361;
 }
+.title {
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.5em;
+    font-family: Georgia;
+}
 
+    .title:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 .top-row {
     background-color: #057ae5;
     border-bottom: 1px solid #d6d5d5;
-    justify-content: flex-end;
+    justify-content: center;
     height: 3.5rem;
     display: flex;
     align-items: center;
+    position: relative;
 }
 
     .top-row ::deep a, .top-row ::deep .btn-link {
@@ -37,6 +47,16 @@ main {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+.title-container {
+    flex-grow: 1; /* Allow the title to take up available space */
+    text-align: center; /* Center the title text */
+}
+
+.login-container {
+    position: absolute;
+    right: 0;
+}
 
 @media (max-width: 640.98px) {
     .top-row {

@@ -2,9 +2,13 @@
 @inject Dashboard.Services.CalendarService CalendarService
 
 <div class="calendar-controls">
-    <button @onclick="ShowPreviousMonth">Previous</button>
+    <button @onclick="ShowPreviousMonth">
+        <Icon Name="IconName.ArrowLeft" Size="IconSize.x6" Style=" color: #000;" />
+    </button>
     <button @onclick="ShowCurrentMonth">Current Month</button>
-    <button @onclick="ShowNextMonth">Next</button>
+    <button @onclick="ShowNextMonth">
+        <Icon Name="IconName.ArrowRight" Size="IconSize.x6" Style=" color: #000;" />
+    </button>
 </div>
 
 @if (holidays == null)

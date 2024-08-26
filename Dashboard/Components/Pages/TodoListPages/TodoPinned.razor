@@ -25,11 +25,6 @@
                 <span class="progress-circle-dot @GetCircleDotColor(pinnedTodo.isDone)"></span>
                 <span>@(pinnedTodo.isDone ? "Done" : "Not Done")</span>
             </div>
-            <div class="actions">
-                <a href="@($"/todolists/details?id=" + pinnedTodo.Id)" class="btn btn-primary">View</a>
-                <a href="@($"/todolists/edit?id=" + pinnedTodo.Id)" class="btn btn-warning">Edit</a>
-                <a href="#" class="btn btn-secondary" @onclick="UnpinTodo">Unpin</a>
-            </div>
         </div>
     }
 }
@@ -52,28 +47,10 @@ else
         {
             var userId = loginService.Id;
 
-            // Ensure only one operation at a time on DbContext instance
-            await Task.Delay(10);  // Optional: tiny delay to ensure previous context use is complete
-
             pinnedTodo = await DB.TodoLists
-                .AsNoTracking()  // Add AsNoTracking if you don't plan to update the entity
+                .AsNoTracking()
                 .FirstOrDefaultAsync(t => t.UserId == userId && t.IsPinned);
-        }
-    }
 
-    private async Task UnpinTodo()
-    {
-        if (pinnedTodo != null)
-        {
-            pinnedTodo.IsPinned = false;
-
-            DB.TodoLists.Update(pinnedTodo);
-
-            // Wait for the update operation to complete before proceeding
-            await DB.SaveChangesAsync();
-
-            // Clear the pinnedTodo after saving
-            pinnedTodo = null;
         }
     }
 

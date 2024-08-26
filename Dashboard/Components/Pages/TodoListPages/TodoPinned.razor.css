@@ -41,24 +41,6 @@
         background-color: green;
     }
 
-/* Action buttons at the bottom of the sticky note */
-.pinned-todo-item .actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-}
-
-    /* General button styling for the sticky note actions */
-    .pinned-todo-item .actions .btn {
-        font-size: 0.9em;
-        padding: 5px 10px;
-        border-radius: 5px;
-    }
-
-        /* Add some margin between buttons */
-        .pinned-todo-item .actions .btn + .btn {
-            margin-left: 10px;
-        }
 
 /* Sticky note with a dashed border */
 .sticky-note {

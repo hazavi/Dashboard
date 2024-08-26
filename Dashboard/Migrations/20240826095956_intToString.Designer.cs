@@ -4,6 +4,7 @@ using Dashboard.Connect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dashboard.Migrations
 {
     [DbContext(typeof(DashboardDbContext))]
-    partial class DashboardDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240826095956_intToString")]
+    partial class intToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,8 +27,8 @@ namespace Dashboard.Migrations
 
             modelBuilder.Entity("Dashboard.Model.DashboardState", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("ShowCalendar")
                         .HasColumnType("bit");
@@ -182,17 +185,6 @@ namespace Dashboard.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Dashboard.Model.DashboardState", b =>
-                {
-                    b.HasOne("Dashboard.Model.User", "User")
-                        .WithMany("DashboardStates")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Dashboard.Model.Location", b =>
                 {
                     b.HasOne("Dashboard.Model.User", "User")
@@ -234,8 +226,6 @@ namespace Dashboard.Migrations
 
             modelBuilder.Entity("Dashboard.Model.User", b =>
                 {
-                    b.Navigation("DashboardStates");
-
                     b.Navigation("Location")
                         .IsRequired();
                 });

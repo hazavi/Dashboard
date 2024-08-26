@@ -21,6 +21,7 @@ namespace Dashboard.Model
         public string DisplayProfileImage => string.IsNullOrEmpty(ProfileImage) ? "/imgs/pfp.jpg" : ProfileImage;
 
         public Location Location { get; set; }
+        public ICollection<DashboardState> DashboardStates { get; set; }
 
     }
 }

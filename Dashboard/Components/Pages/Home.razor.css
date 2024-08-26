@@ -6,6 +6,18 @@
     padding: 20px;
     justify-content: center; /* Center widgets horizontally */
 }
+.login-message {
+    text-align: center; /* Centers text horizontally */
+    margin: 0; /* Reset margin to ensure proper centering */
+    position: absolute; /* Allows for precise positioning */
+    left: 50%; /* Positions the left of the element at 50% of the container width */
+    transform: translate(-43%, -50%); /* Adjusts the position to center the element */
+    width: 100%; /* Ensure the width of the container is used for centering */
+    font-weight:bold;
+    font-size:1em;
+    color:red;
+
+}
 
 /* Each widget container */
 .widget-container {
@@ -13,10 +25,14 @@
     border-radius: 8px;
     padding: 15px;
     width: 100%;
-    max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px; /* Slightly reduce the max width for better spacing */
     position: relative;
+    transition: transform 0.2s, box-shadow 0.2s; /* Smooth transform and shadow transition */
 }
+
+    .widget-container:hover {
+        transform: translateY(-5px); /* Slight lift effect on hover */
+    }
 
 /* Header for each widget */
 .widget-header {
@@ -24,6 +40,10 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.2s ease-in-out; /* Smooth opacity transition */
 }
 
 /* Remove button */
@@ -31,7 +51,7 @@
     background: #ff4d4d;
     border: none;
     color: white;
-    padding: 5px 10px;
+    padding: 5px;
     border-radius: 50%;
     cursor: pointer;
     font-size: 14px;
@@ -40,6 +60,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute; /* Position relative to the widget container */
+    top: 10px;
+    right: 10px;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.2s ease-in-out; /* Smooth opacity transition */
+}
+
+/* Show remove button only on hover */
+.widget-container:hover .widget-header,
+.widget-container:hover .remove-btn {
+    opacity: 1;
 }
 
 /* Floating button */
@@ -59,6 +90,7 @@
     font-size: 24px;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background 0.2s ease-in-out;
 }
 
     .floating-controls:hover {
@@ -88,6 +120,7 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    transition: background 0.2s ease-in-out;
 }
 
     .add-btn:hover {
