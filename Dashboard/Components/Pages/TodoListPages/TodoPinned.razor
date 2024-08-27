@@ -13,7 +13,7 @@
         <p>No pinned to-do item found.</p>
     }
     else
-    {
+    {//Displaying users pinned todo
         <div class="pinned-todo-item sticky-note @GetNoteCssClass(pinnedTodo)" style="background-color: @(pinnedTodo.isDone ? "#ccc" : pinnedTodo.Color); --sticky-note-border-color: @(pinnedTodo.isDone ? "#999" : pinnedTodo.Color);">
             <div class="title">
                 <h3>@pinnedTodo.Title</h3>
@@ -40,7 +40,7 @@ else
     {
         await LoadPinnedTodoAsync();
     }
-
+    //Loads Pinned Todo
     private async Task LoadPinnedTodoAsync()
     {
         if (loginService.IsLoggedIn)

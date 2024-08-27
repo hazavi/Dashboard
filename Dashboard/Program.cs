@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Services Configuration
+// Configure services for dependency injection( a way to give a class the things it needs (its dependencies) from the outside)
+
+// Adding CORS policy(lets your server decide which websites can access its resources from different domains.)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
@@ -18,18 +20,18 @@ builder.Services.AddCors(options =>
         });
 });
 
-//Movies API
+// Registering Movies Services to be injected where needed
 builder.Services.AddScoped<TopRatedMovies>();
 builder.Services.AddScoped<PopularMovies>();
 builder.Services.AddScoped<NowPlayingMovies>();
 builder.Services.AddScoped<UpcomingMovies>();
 
-//Calendar API
+// Registering CalendarService with HTTP client for making API requests
 builder.Services.AddHttpClient<CalendarService>();
 builder.Services.AddScoped<CalendarService>();
 
 
-// NewsAPI Configuration
+// Registering NewsService with HTTP client and setting the base address
 
 builder.Services.AddHttpClient<NewsService>(client =>
 {
@@ -38,23 +40,23 @@ builder.Services.AddHttpClient<NewsService>(client =>
 builder.Services.AddSingleton<NewsService>();
 
 
-// WeatherAPI Configuration
+// Registering WeatherApiService with HTTP client and setting the base address for API requests
 builder.Services.AddHttpClient<WeatherApiService>(client =>
 {
     client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/");
     // Optionally add other default headers or configurations
 });
 
-// Register services
+// Register user and login services
 builder.Services.AddScoped<UserService>();
 builder.Services.AddSingleton<LoginService>();
 
-// Bootstrap and Blazor Components
+// Adding Blazor Bootstrap and Razor components for UI
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Database Context Configuration
+// Configuring Entity Framework with SQL Server, using a connection string from configuration
 builder.Services.AddDbContext<DashboardDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
@@ -65,7 +67,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Middleware configuration for handling HTTP requests
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -76,14 +78,21 @@ else
     app.UseHsts();
     app.UseMigrationsEndPoint();
 }
-
+// Applying the CORS policy configured earlier
 app.UseCors("AllowSpecificOrigins");
+
+// Middleware for HTTPS redirection and serving static files
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Middleware for routing and authorization
 app.UseRouting();
 app.UseAuthorization();
+
+// Middleware for antiforgery protection
 app.UseAntiforgery();
 
+// Map Razor components and configure server-side rendering mode
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 

@@ -10,32 +10,34 @@ namespace Dashboard.Services
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
+        // Constructor to initialize NewsService with HttpClient and configuration
         public NewsService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _apiKey = "pub_5139706630665ef913c59b36433a793f18509";
+            _apiKey = "pub_5139706630665ef913c59b36433a793f18509"; // API key
         }
 
+        // Fetches the top news articles
         public async Task<NewsResponse> GetTopNewsAsync()
         {
             var url = $"https://newsdata.io/api/1/latest?apikey={_apiKey}&language=en&category=world&timezone=Europe/Berlin&removeduplicate=1&size=10&prioritydomain=top&domain=bbc";
 
             try
             {
-                var response = await _httpClient.GetStringAsync(url);
+                var response = await _httpClient.GetStringAsync(url); // Make HTTP request 
                 Console.WriteLine(response); // Log response for debugging
 
-                var newsResponse = JsonConvert.DeserializeObject<NewsResponse>(response);
-                return newsResponse;
+                var newsResponse = JsonConvert.DeserializeObject<NewsResponse>(response); // Deserialize JSON response(converts JSON string to C# objects )
+                return newsResponse; // Return deserialized response
             }
             catch (HttpRequestException e)
             {
-                throw new Exception($"Request error: {e.Message}");
+                throw new Exception($"Request error: {e.Message}"); // Handle and rethrow HTTP request exceptions
             }
         }
     }
 
-    // Response model
+    // Models
     public class NewsResponse
     {
         public string Status { get; set; }
@@ -45,7 +47,6 @@ namespace Dashboard.Services
         public NewsItem[] Results { get; set; }
     }
 
-    // News item model
     public class NewsItem
     {
         public string ArticleId { get; set; }
@@ -53,7 +54,7 @@ namespace Dashboard.Services
         public string Link { get; set; }
         public string Description { get; set; }
         public string Content { get; set; }
-        public string PubDate { get; set; } // API returns as string
+        public string PubDate { get; set; } 
 
         [JsonProperty("image_url")]
         public string ImageUrl { get; set; }
@@ -65,8 +66,7 @@ namespace Dashboard.Services
         public string[] Category { get; set; }
         public bool Duplicate { get; set; }
 
-        // Property for image URL
+        // Property to return image URL if available
         public string ImageUrlToShow => !string.IsNullOrEmpty(ImageUrl) ? ImageUrl : string.Empty;
     }
-
 }

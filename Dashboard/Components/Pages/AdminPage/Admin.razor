@@ -1,13 +1,13 @@
 ﻿@page "/admin"
 @inject Dashboard.Services.LoginService loginService
 
-@if (loginService.IsLoggedIn && loginService.IsAdmin)
+@if (loginService.IsLoggedIn && loginService.IsAdmin)// if the user is logged in and is an Admin, access the page
 {
     <h1>Hello,Admin</h1>
     
 }
 else
-{
+{ // if user is not an admin, no access message displayed
     <p>You don't have access to this page!</p>
 }
 

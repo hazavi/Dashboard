@@ -1,5 +1,6 @@
 ﻿namespace Dashboard.Services
 {
+    // A service for saving users login details when they login
     public class LoginService
     {
         public int Id { get; set; }

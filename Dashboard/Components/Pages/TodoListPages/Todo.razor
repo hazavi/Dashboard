@@ -5,6 +5,7 @@
 @inject Dashboard.Connect.DashboardDbContext DB
 @inject Dashboard.Services.LoginService loginService
 
+<!-- Check if the user is logged in -->
 @if (loginService.IsLoggedIn)
 {
     <h2><strong>Your Todo Lists</strong></h2>
@@ -24,6 +25,7 @@
     {
         <p>No todo lists found.</p>
     }
+    @* Display todo list items *@
     else
     {
         <div class="sticky-notes-container">
@@ -46,14 +48,6 @@
                             <input type="checkbox" @bind="todo.isDone" />
                             <span class="slider round"></span>
                         </label>
-                        @if (!todo.isDone)
-                        {
-                            <button class="nav-link btn btn-primary" @onclick="() => ToggleColorSelector(todo.Id)">
-                                <span class="oi oi-brush @GetColorSelectorIcon(todo.Id)" aria-hidden="true"></span>
-                            </button>
-                        }
-
-                        <!-- Pin/Unpin Button -->
                         <button class="pinbtn btn btn-info" @onclick="() => TogglePin(todo)">
                             <Icon Name="@(todo.IsPinned ? IconName.PinFill : IconName.Pin)" Size="IconSize.x5" />
                         </button>
@@ -68,21 +62,6 @@
                             <Icon Name="IconName.TrashFill" Size="IconSize.x5" />
                         </a>
                     </div>
-
-                    @if (colorSelectors.ContainsKey(todo.Id) && colorSelectors[todo.Id])
-                    {
-                        <div class="color-options">
-                            @foreach (var color in customColors)
-                            {
-                                <button class="color-button" style="background-color: @color" @onclick="() => ChangeNoteColor(todo, color)">
-                                    @if (todo.Color == color)
-                                    {
-                                        <span class="oi oi-check" aria-hidden="true"></span>
-                                    }
-                                </button>
-                            }
-                        </div>
-                    }
                 </div>
             }
         </div>
@@ -94,23 +73,16 @@ else
 }
 
 @code {
-    private List<TodoList>? todos;
-
-    private List<string> customColors = new List<string>
-    {
-        "#ffd700", "#FF6B6B", "lightblue", "lightskyblue", "darkseagreen", "lightgreen", "lightsteelblue",
-        "mediumpurple", "antiquewhite", "burlywood", "cornflowerblue", "gold", "lightseagreen", "lightsalmon",
-        "#ff6a00", "#00ffff", "#ff00dc", "lightpink", "#b200ff"
-    };
-
-    private Dictionary<int, bool> colorSelectors = new Dictionary<int, bool>();
+    private List<TodoList>? todos; // List of todo items
 
     protected override async Task OnInitializedAsync()
     {
+        // Check if the user is logged in
         if (loginService.IsLoggedIn)
         {
             var userId = loginService.Id;
 
+            // Fetch the todo lists for the logged-in user
             todos = await DB.TodoLists
                 .Where(t => t.UserId == userId)
                 .ToListAsync();
@@ -119,48 +91,22 @@ else
 
     private string GetCircleDotColor(bool isDone)
     {
+        // Return color based on whether the todo is done or not
         return isDone ? "red" : "green";
     }
 
     private string GetNoteCssClass(TodoList item)
     {
+        // Return CSS class based on whether the todo is done
         return item.isDone ? "done" : "";
     }
 
-    private void ToggleColorSelector(int itemId)
+    private void TogglePin(TodoList todo)
     {
-        if (colorSelectors.ContainsKey(itemId))
-        {
-            colorSelectors[itemId] = !colorSelectors[itemId];
-        }
-        else
-        {
-            colorSelectors[itemId] = true;
-        }
-    }
-
-    private string GetColorSelectorIcon(int itemId)
-    {
-        return colorSelectors.ContainsKey(itemId) && colorSelectors[itemId] ? "oi-caret-top" : "oi-paint-bucket";
-    }
-
-    private void ChangeNoteColor(TodoList item, string color)
-    {
-        item.Color = color;
-        DB.TodoLists.Update(item);
-        DB.SaveChanges();
-        if (colorSelectors.ContainsKey(item.Id))
-        {
-            colorSelectors[item.Id] = false;
-        }
-    }
-
-    private async Task TogglePin(TodoList todo)
-    {
-        // Unpin any other pinned to-do items
-        var pinnedTodo = await DB.TodoLists
+        // Unpin any currently pinned todo items
+        var pinnedTodo = DB.TodoLists
             .Where(t => t.UserId == loginService.Id && t.IsPinned)
-            .FirstOrDefaultAsync();
+            .FirstOrDefault();
 
         if (pinnedTodo != null && pinnedTodo.Id != todo.Id)
         {
@@ -168,16 +114,16 @@ else
             DB.TodoLists.Update(pinnedTodo);
         }
 
-        // Toggle pin state
+        // Toggle pin state of the current todo
         todo.IsPinned = !todo.IsPinned;
         DB.TodoLists.Update(todo);
 
         // Save changes to the database
-        await DB.SaveChangesAsync();
+        DB.SaveChanges();
 
-        // Refresh the to-do list
-        todos = await DB.TodoLists
+        // Refresh the todo list
+        todos = DB.TodoLists
             .Where(t => t.UserId == loginService.Id)
-            .ToListAsync();
+            .ToList();
     }
 }

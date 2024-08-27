@@ -18,6 +18,8 @@ namespace Dashboard.Model
         [StringLength(100)]
         public string Email { get; set; }
         public string? ProfileImage { get; set; }
+
+        // Displays ProfileImage if user had set, if not then use the default image
         public string DisplayProfileImage => string.IsNullOrEmpty(ProfileImage) ? "/imgs/pfp.jpg" : ProfileImage;
 
         public Location Location { get; set; }

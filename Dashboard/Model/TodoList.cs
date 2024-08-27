@@ -6,8 +6,8 @@ namespace Dashboard.Model
     public class TodoList
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public DateOnly TodoDue { get; set; } = DateOnly.FromDateTime(DateTime.Now); 
+        public int UserId { get; set; } // Foreign key that references the User who owns this TodoList
+        public DateOnly TodoDue { get; set; } = DateOnly.FromDateTime(DateTime.Now); //sets the datetime to now
 
         [Required(ErrorMessage = "Please provide a Title")]
         [StringLength(20)]
@@ -16,7 +16,7 @@ namespace Dashboard.Model
         public DateTime DateCreated { get; set; }
         public bool isDone { get; set; }
 
-        public string? Color { get; set; } = "#ffd700";
+        public string? Color { get; set; } = "#ffd700"; // sets a default color
         public bool IsPinned { get; set; }
 
         [ForeignKey("UserId")]

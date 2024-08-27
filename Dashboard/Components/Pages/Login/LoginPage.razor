@@ -9,15 +9,15 @@
 @using Dashboard.Model
 @inject ToastService toastService
 
-@if (loginService.IsLoggedIn)
+@if (loginService.IsLoggedIn) //if user is logged in redirects to home page
 {
     <div class="text-center">
         <p>You are already logged in. Redirecting to your profile...</p>
         <p>If you are not redirected, <a href="/user/@loginService.Id">click here</a>.</p>
     </div>
 }
-else
-{
+else 
+{ //if not logged in show login form 
     <div class="login-background">
         <div class="login-card card shadow-lg">
             <h1 class="text-center card-header">Login</h1>
@@ -53,57 +53,59 @@ else
 }
 
 @code {
-    private User user { get; set; } = new();
-    private string errorMessage;
+    private User user { get; set; } = new(); // Holds the user data entered in the form
+    private string errorMessage; // Holds error messages for login issues
 
-    [Inject] protected ToastService ToastService { get; set; } = default!;
+    [Inject] protected ToastService ToastService { get; set; } = default!; // Service to show toast notifications
 
-    List<ToastMessage> messages = new List<ToastMessage>();
+    List<ToastMessage> messages = new List<ToastMessage>(); // List to manage toast messages
 
-    private void ShowMessage(ToastType toastType) => messages.Add(CreateToastMessage(toastType));
+    private void ShowMessage(ToastType toastType) => messages.Add(CreateToastMessage(toastType)); // Adds a new toast message
 
     private ToastMessage CreateToastMessage(ToastType toastType)
     {
         string message = toastType == ToastType.Success
-            ? $"Logged in successfully!"
-            : $"Login failed!";
+            ? $"Logged in successfully!" // Success message
+            : $"Login failed!"; // Failure message
 
         return new ToastMessage
-            {
-                Type = toastType,
-                Message = message,
-            };
+        {
+            Type = toastType,
+            Message = message,
+        };
     }
 
     protected override void OnInitialized()
     {
         if (loginService.IsLoggedIn)
         {
-            Nav.NavigateTo($"/");
+            Nav.NavigateTo($"/"); // Redirects to home if already logged in
         }
     }
 
     private async Task Login()
     {
+        // Checks if the entered username and password match any user in the database
         var authenticatedUser = await DB.Users
             .FirstOrDefaultAsync(u => u.Username == user.Username && u.Password == user.Password);
 
         if (authenticatedUser != null)
         {
+            // If user is authenticated, set login details and redirect
             loginService.Id = authenticatedUser.Id;
             loginService.Username = authenticatedUser.Username;
             loginService.IsLoggedIn = true;
             loginService.ImgURL = authenticatedUser.ProfileImage;
             loginService.IsAdmin = authenticatedUser.Id == 1 && authenticatedUser.Username == "admin";
 
-            ToastService.Notify(new(ToastType.Success, $"Logged in successfully."));
+            ToastService.Notify(new(ToastType.Success, $"Logged in successfully.")); // Show success message
 
-            await Task.Delay(500);
-            Nav.NavigateTo($"/", true); 
+            await Task.Delay(500); // Short delay before redirect
+            Nav.NavigateTo($"/", true); // Redirect to home page
         }
         else
         {
-            errorMessage = "Invalid username or password. Please try again.";
+            errorMessage = "Invalid username or password. Please try again."; // Show error message if login fails
         }
     }
 }

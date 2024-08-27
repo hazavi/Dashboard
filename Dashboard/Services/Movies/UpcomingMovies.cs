@@ -6,43 +6,45 @@ using Newtonsoft.Json;
 
 namespace Dashboard.Services.Movies
 {
+    // Service class for interacting with the Movie Database API to retrieve upcoming movies
     public class UpcomingMovies
     {
         private readonly RestClient _client;
-        private const string BearerToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwMTExYTliOTgzNmIyM2JkN2NlNWVjMjNhNDMyYWM0NCIsIm5iZiI6MTcyNDczNzYwNS4wODM2MTIsInN1YiI6IjY2Y2MyYWQ2ZDZjOWM0MzliMzFkNzI1MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zblG2STINV80mvXBwijgedtIRy_Zst8UjN14gi1dEFg";
+        private const string BearerToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwMTExYTliOTgzNmIyM2JkN2NlNWVjMjNhNDMyYWM0NCIsIm5iZiI6MTcyNDczNzYwNS4wODM2MTIsInN1YiI6IjY2Y2MyYWQ2ZDZjOWM0MzliMzFkNzI1MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zblG2STINV80mvXBwijgedtIRy_Zst8UjN14gi1dEFg"; // API key for authentication
 
+        // Constructor initializes the RestClient with the base API URL
         public UpcomingMovies()
         {
             var options = new RestClientOptions("https://api.themoviedb.org/3/");
             _client = new RestClient(options);
-
         }
 
+        // Fetches a list of upcoming movies from the API
         public async Task<List<UpcomingMovie>> GetUpcomingMoviesAsync()
         {
-            var request = new RestRequest("movie/upcoming", Method.Get);
-            request.AddParameter("language", "en-US");
-            request.AddParameter("page", "1");
-            request.AddHeader("accept", "application/json");
-            request.AddHeader("Authorization", $"Bearer {BearerToken}");
+            var request = new RestRequest("movie/upcoming", Method.Get); // Create request for upcoming movies
+            request.AddParameter("language", "en-US"); // Add language parameter
+            request.AddParameter("page", "1"); // Add page parameter
+            request.AddHeader("accept", "application/json"); // Set accept header
+            request.AddHeader("Authorization", $"Bearer {BearerToken}"); // Set authorization header with the Bearer token
 
-            var response = await _client.ExecuteAsync(request);
+            var response = await _client.ExecuteAsync(request); // Send the request asynchronously(network request: a way that allows your program to continue executing other tasks while waiting for the request to complete )
 
             if (response.IsSuccessful)
             {
-                Console.WriteLine("Response Content: " + response.Content); // Log the response content
-                var moviesResponse = JsonConvert.DeserializeObject<UpcomingMovieApiResponse>(response.Content);
-                return moviesResponse?.Results;
+                Console.WriteLine("Response Content: " + response.Content); // Log the response content for debugging
+                var moviesResponse = JsonConvert.DeserializeObject<UpcomingMovieApiResponse>(response.Content); // Deserialize JSON response
+                return moviesResponse?.Results; // Return the list of upcoming movies
             }
             else
             {
-                Console.WriteLine("Error: " + response.StatusCode);
-                return new List<UpcomingMovie>();
+                Console.WriteLine("Error: " + response.StatusCode); // Log error status code
+                return new List<UpcomingMovie>(); // Return an empty list in case of an error
             }
         }
-
     }
 
+    // Response model for the API response 
     public class UpcomingMovieApiResponse
     {
         [JsonProperty("results")]

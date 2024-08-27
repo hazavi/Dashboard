@@ -1,49 +1,57 @@
 ﻿@page "/news"
 @inject Dashboard.Services.NewsService NewsService
 
+<!-- Show a loading message while news items are being fetched -->
 @if (newsItems == null)
 {
     <p>Loading...</p>
 }
+<!-- Show a message if no news items are available -->
 else if (newsItems.Length == 0)
 {
-    <p>No news items available.</p>
+<p>No news items available.</p>
 }
+<!-- Display the news items -->
 else
 {
-    <div class="news-container">
-        @foreach (var item in newsItems)
-        {
-            <div class="news-item">
-                <h4>@item.Title</h4>
-                @if (!string.IsNullOrEmpty(item.ImageUrlToShow))
-                {
-                    <img src="@item.ImageUrlToShow" alt="News Image" class="news-image" />
-                }
-                else
-                {
-                    <p>No image available.</p>
-                }
-                <p>@item.Description</p>
-                <a href="@item.Link" target="_blank">Read more</a>
-            </div>
-        }
-    </div>
+<div class="news-container">
+    @foreach (var item in newsItems)
+    {
+        <div class="news-item">
+            <h4>@item.Title</h4>
+            @* Display the news image if available *@ 
+            @if (!string.IsNullOrEmpty(item.ImageUrlToShow))
+            {
+                <img src="@item.ImageUrlToShow" alt="News Image" class="news-image" />
+            }
+            else
+            {
+                <p>No image available.</p>
+            }
+            <p>@item.Description</p>
+            <a href="@item.Link" target="_blank">Read more</a>
+        </div>
+    }
+</div>
 }
 
 @code {
-    private NewsItem[] newsItems = Array.Empty<NewsItem>();
+    private NewsItem[] newsItems = Array.Empty<NewsItem>(); // Holds the list of news items
 
+    // Called when the component is initialized
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            // Fetch the top news items from the news service
             var response = await NewsService.GetTopNewsAsync();
+
+            // Check if the response has news items
             if (response?.Results != null && response.Results.Length > 0)
             {
-                newsItems = response.Results;
+                newsItems = response.Results; // Set the news items to display
 
-                // Log each image URL to verify
+                // Debug: Print each image URL to check if they are correct
                 foreach (var item in newsItems)
                 {
                     Console.WriteLine($"Image URL: {item.ImageUrl}");
@@ -51,15 +59,14 @@ else
             }
             else
             {
-                newsItems = Array.Empty<NewsItem>();
+                newsItems = Array.Empty<NewsItem>(); // No news items found
             }
         }
         catch (Exception ex)
         {
+            // Log error if fetching news fails
             Console.WriteLine($"Error fetching news: {ex.Message}");
-            newsItems = Array.Empty<NewsItem>();
+            newsItems = Array.Empty<NewsItem>(); // Set to empty in case of error
         }
     }
-
-
 }

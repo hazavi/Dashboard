@@ -4,41 +4,45 @@ using System.Threading.Tasks;
 
 namespace Dashboard.Services
 {
+    // Service class for interacting with the Calendarific API to retrieve holiday data
     public class CalendarService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey = "DjjGk3gO3t7R5ZOaP3StJKzr7ZZJMEZp"; // Replace with your API key
-        private readonly string _baseApiUrl = "https://calendarific.com/api/v2/holidays";
+        private readonly string _apiKey = "DjjGk3gO3t7R5ZOaP3StJKzr7ZZJMEZp"; // API key for authentication
+        private readonly string _baseApiUrl = "https://calendarific.com/api/v2/holidays"; // Base URL for the API
 
+        // Constructor to initialize HttpClient
         public CalendarService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
+        // Fetches holiday data for the current year from the API
         public async Task<List<Holiday>> GetHolidaysAsync()
         {
-            var year = DateTime.Now.Year;
-            var url = $"{_baseApiUrl}?&api_key={_apiKey}&country=US&year={year}";
+            var year = DateTime.Now.Year; // Get the current year
+            var url = $"{_baseApiUrl}?&api_key={_apiKey}&country=US&year={year}"; // Construct the API URL
 
             try
             {
-                var response = await _httpClient.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+                var response = await _httpClient.GetAsync(url); // Send the request to the API
+                response.EnsureSuccessStatusCode(); // Ensure the request was successful
 
-                var content = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"API Response: {content}");
+                var content = await response.Content.ReadAsStringAsync(); // Read the response content
+                Console.WriteLine($"API Response: {content}"); // Log the response for debugging
 
-                var result = JsonConvert.DeserializeObject<CalendarificResponse>(content);
-                return result?.Response?.Holidays ?? new List<Holiday>();
+                var result = JsonConvert.DeserializeObject<CalendarificResponse>(content); // Deserialize the JSON response(JSON string to object)
+                return result?.Response?.Holidays ?? new List<Holiday>(); // Return the list of holidays or an empty list
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
-                return new List<Holiday>();
+                Console.WriteLine($"Exception: {ex.Message}"); // Log any exceptions
+                return new List<Holiday>(); // Return an empty list in case of an error
             }
         }
     }
 
+    // Classes for API response
     public class CalendarificResponse
     {
         [JsonProperty("response")]

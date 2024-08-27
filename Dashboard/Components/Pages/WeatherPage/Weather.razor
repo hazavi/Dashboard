@@ -6,6 +6,7 @@
 @inject Dashboard.Connect.DashboardDbContext DbContext
 @inject Dashboard.Services.LoginService LoginService
 
+<!-- Display the weather data if it is available -->
 @if (weatherData != null)
 {
     <div class="weather-card">
@@ -31,20 +32,22 @@ else
 }
 
 @code {
-    private WeatherData weatherData;
-    private bool loading;
+    private WeatherData weatherData; // Stores the weather data
+    private bool loading; // Indicates if data is being fetched
     private string city;
 
+    // Called when the component is first loaded
     protected override async Task OnInitializedAsync()
     {
-        await SetCityAndFetchWeather();
+        await SetCityAndFetchWeather(); // Fetch weather data
     }
 
+    // Determines the city and fetches weather data
     private async Task SetCityAndFetchWeather()
     {
-        loading = true;
+        loading = true; // Start loading
 
-        // Determine the city to fetch weather for
+        // Get the city name based on the user's location if logged in
         if (LoginService.IsLoggedIn)
         {
             var user = await DbContext.Users
@@ -53,7 +56,7 @@ else
 
             if (user?.Location != null)
             {
-                city = user.Location.CityName;
+                city = user.Location.CityName; // Use the city from the user's location
             }
             else
             {
@@ -65,8 +68,8 @@ else
             city = "London"; // Default city for non-logged-in users
         }
 
-        // Fetch the weather data
+        // Fetch the weather data for the determined city
         weatherData = await WeatherApiService.GetWeatherAsync(city);
-        loading = false;
+        loading = false; // Stop loading
     }
 }

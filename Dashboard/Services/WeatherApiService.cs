@@ -7,16 +7,23 @@ public class WeatherApiService
 {
     private readonly HttpClient _httpClient;
 
+    // Constructor to inject HttpClient
     public WeatherApiService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
+    // Fetches weather data for a given city
     public async Task<WeatherData> GetWeatherAsync(string city)
     {
-        var response = await _httpClient.GetFromJsonAsync<OpenWeatherResponse>($"weather?q={city}&appid=96480201313603b6e3bf519e7d1e5c10&units=metric");
+        // Make API request and deserialize response
+        var response = await _httpClient.GetFromJsonAsync<OpenWeatherResponse>(
+            $"weather?q={city}&appid=96480201313603b6e3bf519e7d1e5c10&units=metric"
+        );
+
         if (response != null)
         {
+            // Map response to WeatherData object
             return new WeatherData
             {
                 City = response.Name,
@@ -25,15 +32,15 @@ public class WeatherApiService
                 WeatherDescription = response.Weather[0].Description,
                 Humidity = response.Main.Humidity,
                 WindSpeed = response.Wind.Speed,
-                IconUrl = $"http://openweathermap.org/img/wn/{response.Weather[0].Icon}@2x.png", // URL for the weather icon
-                Timestamp = DateTime.UtcNow // Set timestamp to current UTC time
+                IconUrl = $"http://openweathermap.org/img/wn/{response.Weather[0].Icon}@2x.png",
+                Timestamp = DateTime.UtcNow
             };
         }
-        return null;
+        return null; // Return null if no response
     }
 }
 
-// Update to match OpenWeatherMap's response structure
+// Class representing the structure of the API response
 public class OpenWeatherResponse
 {
     public string Name { get; set; }
@@ -41,12 +48,14 @@ public class OpenWeatherResponse
     public WeatherData[] Weather { get; set; }
     public WindData Wind { get; set; }
 
+    // Nested class for main weather data (temperature and humidity)
     public class MainData
     {
         public float Temp { get; set; }
         public int Humidity { get; set; }
     }
 
+    // Nested class for weather conditions
     public class WeatherData
     {
         public string Main { get; set; }
@@ -54,12 +63,14 @@ public class OpenWeatherResponse
         public string Icon { get; set; }
     }
 
+    // Nested class for wind data
     public class WindData
     {
         public float Speed { get; set; }
     }
 }
 
+// Class for storing formatted weather data
 public class WeatherData
 {
     public string City { get; set; }
@@ -68,10 +79,9 @@ public class WeatherData
     public string WeatherDescription { get; set; }
     public int Humidity { get; set; }
     public float WindSpeed { get; set; }
-    public string IconUrl { get; set; } // URL for the weather icon
+    public string IconUrl { get; set; }
 
-
-    // Property to get rounded temperature
+    // Property to get rounded temperature (to the nearest integer)
     public int RoundedTemperature => (int)Math.Round(Temperature);
 
     public DateTime Timestamp { get; set; }
