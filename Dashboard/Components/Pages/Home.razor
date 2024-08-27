@@ -108,18 +108,21 @@ else
 
 
 @code {
+    // Controls visibility of the widgets, not visible as default
     private bool showMovies = false;
     private bool showWeather = false;
     private bool showNews = false;
     private bool showTodo = false;
     private bool showCalendar = false;
     private bool showControlPanel = false;
-    private int userId; 
+
+    private int userId; // Stores the user's ID
 
     protected override async Task OnInitializedAsync()
     {
-        userId = loginService.Id; 
+        userId = loginService.Id; // Get the user ID from the login service
 
+        // Fetch the current dashboard state from the database
         var state = await DB.GetDashboardStateAsync(userId);
         if (state != null)
         {
@@ -134,6 +137,7 @@ else
 
     private async Task SaveDashboardState()
     {
+        // Save the current dashboard state to the database
         var state = new DashboardState
             {
                 UserId = userId,
