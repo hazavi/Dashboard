@@ -1,6 +1,7 @@
 using Dashboard.Components;
 using Dashboard.Connect;
 using Dashboard.Services;
+using Dashboard.Services.Movies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,12 @@ builder.Services.AddCors(options =>
                    .AllowAnyMethod();
         });
 });
+
+//Movies API
+builder.Services.AddScoped<TopRatedMovies>();
+builder.Services.AddScoped<PopularMovies>();
+builder.Services.AddScoped<NowPlayingMovies>();
+builder.Services.AddScoped<UpcomingMovies>();
 
 //Calendar API
 builder.Services.AddHttpClient<CalendarService>();

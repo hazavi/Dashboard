@@ -39,6 +39,7 @@ namespace Dashboard.Connect
                     existingState.ShowNews = state.ShowNews;
                     existingState.ShowTodo = state.ShowTodo;
                     existingState.ShowCalendar = state.ShowCalendar;
+                    existingState.ShowMovies = state.ShowMovies;
                     DashboardStates.Update(existingState);
                 }
                 else

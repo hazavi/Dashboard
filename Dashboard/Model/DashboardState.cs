@@ -7,6 +7,7 @@
         public bool ShowNews { get; set; }
         public bool ShowTodo { get; set; }
         public bool ShowCalendar { get; set; }
+        public bool ShowMovies { get; set; }
 
         public User User { get; set; } // Navigation property
 

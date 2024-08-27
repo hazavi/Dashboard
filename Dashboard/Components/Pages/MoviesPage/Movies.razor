@@ -1,5 +1,29 @@
-﻿<h3>Movies</h3>
+﻿@page "/movies"
+@using Dashboard.Components.Pages.MoviesPage
 
-@code {
+<div class="tabs-container">
+    <Tabs EnableFadeEffect="true" NavStyle="NavStyle.Underline">
+        <Tab Title="Popular" Active="true">
+            <Content>
+                <PopularMovies/>
+            </Content>
+        </Tab>
+        <Tab Title="Top Rated">
+            <Content>
+                <TopRatedMovies />
+            </Content>
+        </Tab>
+        <Tab Title="Now Playing">
+            <Content>
+                <NowPlayingMovies/>
+            </Content>
+        </Tab>
+        <Tab Title="Upcoming">
+            <Content>
+                <UpcomingMovies/>
+            </Content>
+        </Tab>
+    </Tabs>
+</div>
 
-}
+

@@ -1,0 +1,56 @@
+﻿/* Container for Tabs and Content */
+.tabs-container {
+    width: 600px;
+    height: 800px;
+    margin: 0 auto; /* Centers the container horizontally */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers content vertically within the container */
+    border-radius: 10px; /* Optional: Adds rounded corners to the container */
+    background-color: #fff; /* Optional: Adds a background color to the container */
+    box-sizing: border-box; /* Ensures padding and border are included in the width and height */
+    padding: 20px; /* Adds padding inside the container */
+    overflow: hidden; /* Ensures that content doesn’t overflow outside the container */
+}
+
+    /* Styling for tabs navigation */
+    .tabs-container .nav-tabs {
+        display: flex;
+        justify-content: center; /* Center the tabs horizontally */
+        border-bottom: 2px solid #ddd; /* Optional: Adds a border below the tabs */
+        margin-bottom: 20px; /* Space between tabs and content */
+        width: 100%; /* Ensure tabs span the width of the container */
+    }
+
+    /* Styling for each tab */
+    .tabs-container .nav-link {
+        padding: 10px 20px;
+        font-weight: bold;
+        text-align: center; /* Centers text within each tab */
+        color: #333; /* Default color for tabs */
+        border: 1px solid transparent; /* Transparent border for inactive tabs */
+        border-radius: 5px; /* Optional: Rounded corners for tabs */
+        transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+    }
+
+        .tabs-container .nav-link.active {
+            color: #007bff; /* Active tab text color */
+            border-bottom: 2px solid #007bff; /* Underline for active tab */
+            background-color: #fff; /* Background color for active tab */
+        }
+
+    /* Content area styling */
+    .tabs-container .tab-content {
+        flex: 1; /* Allows the content area to expand */
+        display: flex;
+        justify-content: center; /* Center content horizontally */
+        align-items: center; /* Center content vertically */
+        overflow-y: auto; /* Adds vertical scroll if content overflows */
+        padding: 20px;
+        background-color: #fff; /* Background color for content area */
+        border-radius: 10px; /* Rounded corners for content area */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds shadow for content area */
+        box-sizing: border-box;
+        width: 100%; /* Ensures content area spans the width of the container */
+        height: calc(100% - 60px); /* Adjust the height to account for padding and margins */
+    }

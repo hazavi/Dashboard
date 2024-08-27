@@ -1,0 +1,70 @@
+﻿@page "/top-rated-movies"
+@inject Dashboard.Services.Movies.TopRatedMovies MovieService
+@using Dashboard.Services.Movies
+
+
+@if (movies == null)
+{
+    <p>Loading...</p>
+}
+else if (movies.Count == 0)
+{
+    <p>No movies found.</p>
+}
+else
+{
+    <div class="movie-container">
+        <div class="movie-grid">
+            @foreach (var movie in movies)
+            {
+                <div class="movie-card">
+                    <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="movie-poster" />
+                    <div class="movie-info">
+                        <strong>@movie.Title</strong>
+                        <p class="release-date">@FormatReleaseDate(movie.ReleaseDate)</p>
+                        <p class="rating">Rating: @FormatVoteAverage(movie.VoteAverage)</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private List<TopRatedMovie> movies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        movies = await MovieService.GetTopRatedMoviesAsync();
+    }
+
+    private string FormatReleaseDate(string releaseDate)
+    {
+        if (DateTime.TryParse(releaseDate, out var date))
+        {
+            var formattedDate = date.ToString("MMMM d, yyyy"); // Format: Month day, year
+            return CapitalizeMonth(formattedDate);
+        }
+        return releaseDate; // Return the original if parsing fails
+    }
+
+    private string CapitalizeMonth(string date)
+    {
+        // Split the date into parts
+        var parts = date.Split(' ');
+
+        if (parts.Length > 1)
+        {
+            // Capitalize the first letter of the month part
+            parts[0] = char.ToUpper(parts[0][0]) + parts[0].Substring(1);
+            return string.Join(' ', parts);
+        }
+
+        return date;
+    }
+
+    private string FormatVoteAverage(double voteAverage)
+    {
+        return Math.Round(voteAverage, 2).ToString("0.00"); // Round to two decimal places
+    }
+}
