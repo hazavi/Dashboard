@@ -19,8 +19,6 @@
     <div class="notlogin-container">
         <p class="login-message">Login to Personalize your Dashboard!</p>
 
-        <LoginPage />
-
 
     </div>
 
@@ -80,12 +78,12 @@ else
         {
             <div class="widget-container">
                 <div class="widget-header">
-                    <h2>Todo</h2>
+                    <h2>Notes</h2>
                     <button class="remove-btn" @onclick="RemoveTodo">
                         <Icon Name="IconName.XLg" Size="IconSize.x3" Style=" color: red; " />
                     </button>
                 </div>
-                <TodoPinned />
+                <Todo />
             </div>
         }
     </div>

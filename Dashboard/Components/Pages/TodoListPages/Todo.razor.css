@@ -1,156 +1,120 @@
-﻿/* Sticky Note Container */
-.sticky-notes-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 2fr)); /* Adjust column width as needed */
-    gap: 20px; /* Spacing between sticky notes */
-    max-height: 100vh; /* Limit to viewport height */
-    overflow-y: auto; /* Add vertical scroll if needed */
-
+﻿/* Container for todo sidebar and note */
+.todo-container {
+    display: flex;
+    width: 600px;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
-/* Sticky Note Item */
-.sticky-note {
-    background-color: #ffd700; /* Default yellow background color */
-    border-radius: 15px; /* Rounded corners */
-    padding: 15px; /* Padding inside the sticky note */
-    width: 300px;
-    height: 300px;
-    box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.3); /* Drop shadow for 3D effect */
-    position: relative; /* Position relative for positioning buttons */
-    overflow: hidden; /* Hide overflowing content */
+/* Sidebar styles */
+.sidebar {
+    width: 180px;
+    background-color: #f4f4f4;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Space items evenly in the sticky note */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for zoom effect */
-    margin-left: 10px;
-    margin-top: 20px;
+    justify-content: space-between; /* Pushes content to the top and bottom */
+    border-radius: 8px;
 }
 
-    /* Zoom effect on hover */
-    .sticky-note:hover {
-        transform: scale(1.05); 
-        box-shadow: 7px 7px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth effect */
-        border-radius: 15px; 
-    }
-
-    /* Sticky Note Title */
-    .sticky-note .title {
-        font-weight: bold;
-        font-size: 1.5em;
-        color: black;
+    .sidebar h3 {
         margin-top: 0;
+        white-space: nowrap; /* Prevents text from wrapping to the next line */
+        overflow: hidden;    /* Ensures that overflowing content is hidden */
+        text-overflow: ellipsis; /* Adds ellipsis (...) if the text overflows */
     }
 
-    /* Sticky Note Text */
-    .sticky-note .text {
-        white-space: pre-wrap; /* Preserve line breaks and spaces */
-        color: black;
+    .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 5px;
+        flex: 1;
     }
 
-    /* Sticky Note Is Done */
-    .sticky-note .isDone {
-        color: darkgreen; /* Color for the "Is Done" text */
-        align-self: flex-start; /* Move "Is Done" text to the top */
+    .sidebar li {
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
     }
 
-    /* Action Buttons */
-    .sticky-note .actionButtons {
-        opacity: 0;
-        transition: opacity 0.3s;
-        display: flex;
-        justify-content: flex-end;
-        gap: 5px;
-        align-items: center;
+        .sidebar li.active {
+            background-color: #ffd700;
+            color: black;
+        }
+
+        .sidebar li:hover {
+            background-color: #ffd700;
+        }
+
+/* Center the add-todo button */
+.add-todo-button {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center; /* Centers the button horizontally */
+}
+    .add-todo-button:hover {
+        transition: 0.3s;
+        transform: translateY(-5px);
     }
 
-    .sticky-note:hover .actionButtons {
-        opacity: 1; /* Show action buttons on hover */
+.addbtn {
+    border: none;
+    color: black;
+    border-radius: 50%;
+    background-color: #ffd700;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+    .addbtn:hover {
+        transition: 0.3s;
+        color:black;
     }
-
-    .sticky-note .actionButtons a,
-    .sticky-note .actionButtons button {
-        font-size: 15px;
-        color: white;
-        background: transparent; /* Ensure buttons blend with note background */
-        border: none; /* Remove border for cleaner look */
-        transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
-    }
-
-    /* Change the trash icon color to white */
-    .sticky-note .actionButtons .oi-trash {
-        color: white; /* Change the color of the trash icon to white */
-    }
-
-    /* Apply hover effect to buttons */
-    .sticky-note .actionButtons a:hover,
-    .sticky-note .actionButtons button:hover {
-        background-color: #333; /* Change the background color on hover */
-        color: #fff; /* Change the text color on hover */
-    }
-
-    /* Sticky Note Done State */
-    .sticky-note.done {
-        text-decoration: line-through;
-        background-color: #ccc; /* Change background color for done notes */
-        color: #666; /* Change text color for done notes */
-    }
-
-/* Styles for the toggle switch */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 20px;
+    
+/* Sticky note container */
+.sticky-note-container {
+    flex: 1;
+    overflow-y: auto;
 }
 
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+/* Sticky note styles */
+.sticky-note {
+    border: 1px solid var(--sticky-note-border-color);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: var(--sticky-note-background-color);
+    width: 420px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Pushes content to top and action buttons to bottom */
+    position: relative; /* Required for positioning action buttons absolutely */
+}
 
-.slider {
+/* Title styles */
+.title h3 {
+    margin: 0;
+}
+
+/* Text styles */
+.text {
+    flex: 1;
+}
+
+/* Action buttons hidden by default and shown on hover */
+.actionButtons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: flex-end; /* Aligns action buttons to the right */
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s; /* Smooth transition for showing/hiding */
     position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    transition: .4s;
-    border-radius: 20px; /* Rounded corners for the slider */
+    bottom: 20px; /* Position at the bottom of the sticky note */
+    right: 20px; /* Align to the right of the sticky note */
 }
 
-    /* Slider before state */
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 12px;
-        width: 12px;
-        border-radius: 50%;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-    }
-
-/* Checked slider state */
-input:checked + .slider {
-    background-color: #2196F3; /* Color when checked */
+.sticky-note:hover .actionButtons {
+    opacity: 1; /* Show action buttons when sticky note is hovered over */
 }
-
-    input:checked + .slider:before {
-        transform: translateX(20px); /* Move the slider knob to the right */
-    }
-
-/* Add animation when switching */
-.switch input:checked + .slider {
-    background-color: #2196F3; /* Change background color when checked */
-}
-
-.addbutton{
-
-}
-    .addbutton:hover {
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth effect */
-    }

@@ -21,11 +21,9 @@
     <QuickGrid Class="table" Items="DB.TodoLists">
         <PropertyColumn Property="todolist => todolist.Id" />
         <PropertyColumn Property="todolist => todolist.UserId" />
-        <PropertyColumn Property="todolist => todolist.TodoDue" />
         <PropertyColumn Property="todolist => todolist.Title" />
         <PropertyColumn Property="todolist => todolist.Description" />
         <PropertyColumn Property="todolist => todolist.DateCreated" />
-        <PropertyColumn Property="todolist => todolist.isDone" />
 
         <TemplateColumn Context="todolist">
             <a href="@($"todolists/edit?id={todolist.Id}")">Edit</a> |

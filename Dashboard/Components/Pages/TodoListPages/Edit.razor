@@ -29,11 +29,6 @@ else
                     <ValidationMessage For="() => TodoList.UserId" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="tododue" class="form-label">TodoDue:</label>
-                    <InputDate id="tododue" @bind-Value="TodoList.TodoDue" class="form-control" />
-                    <ValidationMessage For="() => TodoList.TodoDue" class="text-danger" />
-                </div>
-                <div class="mb-3">
                     <label for="title" class="form-label">Title:</label>
                     <InputText id="title" @bind-Value="TodoList.Title" class="form-control" />
                     <ValidationMessage For="() => TodoList.Title" class="text-danger" />
@@ -44,11 +39,6 @@ else
                     <ValidationMessage For="() => TodoList.Description" class="text-danger" />
                 </div>
 
-                <div class="mb-3">
-                    <label for="isdone" class="form-label">isDone:</label>
-                    <InputCheckbox id="isdone" @bind-Value="TodoList.isDone" class="form-check-input" />
-                    <ValidationMessage For="() => TodoList.isDone" class="text-danger" />
-                </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
         </div>

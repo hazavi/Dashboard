@@ -16,11 +16,18 @@
 
             @if (!loginService.IsLoggedIn)
             {
-                <a href="login">Login</a>
+                <a href="login">
+
+                    <Icon Name="IconName.ArrowBarRight" Size="IconSize.x3" />
+
+                </a>
             }
             else
             {
-                <a href="logout">Logout</a>
+                <a href="logout">
+                    <Icon Name="IconName.ArrowBarLeft" Size="IconSize.x3" />
+
+                </a>
             }
         </div>
 

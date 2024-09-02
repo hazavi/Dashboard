@@ -12,15 +12,13 @@ namespace Dashboard.Model
 
         public int UserId { get; set; }
 
-        [Required(ErrorMessage = "Enter Zip Code")]
+        [Required]
         public int ZipCode { get; set; }
 
-        [Required(ErrorMessage = "Enter City Name")]
-        [StringLength(100)]
+        [Required]
         public string CityName { get; set; }
 
-        [Required(ErrorMessage = "Enter Country")]
-        [StringLength(100)]
+        [Required]
         public string Country { get; set; }
 
         // Foreign key to User

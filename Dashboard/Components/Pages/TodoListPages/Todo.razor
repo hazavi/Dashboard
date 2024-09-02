@@ -5,66 +5,133 @@
 @inject Dashboard.Connect.DashboardDbContext DB
 @inject Dashboard.Services.LoginService loginService
 
-<!-- Check if the user is logged in -->
 @if (loginService.IsLoggedIn)
 {
-    <h2><strong>Your Todo Lists</strong></h2>
-
-    <p>
-        <a href="todolists/create" class="addbutton btn btn-outline-light">
-            <Icon Name="IconName.PlusLg" Size="IconSize.x5" Style="color: #0085FF;" />
-            Add
-        </a>
-    </p>
-
-    @if (todos is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else if (todos.Count == 0)
-    {
-        <p>No todo lists found.</p>
-    }
-    @* Display todo list items *@
-    else
-    {
-        <div class="sticky-notes-container">
-            @foreach (var todo in todos)
+    <div class="todo-container">
+        <div class="sidebar">
+            @if (todos is null)
             {
-                <div class="sticky-note @GetNoteCssClass(todo)" style="background-color: @(todo.isDone ? "#ccc" : todo.Color); --sticky-note-border-color: @(todo.isDone ? "#999" : todo.Color);">
-                    <div class="isDone">
-                        <span class="progress-circle-dot @GetCircleDotColor(todo.isDone)"></span>
-                        <span>@(todo.isDone ? "Done" : "Not Done")</span>
-                    </div>
-                    <div class="title">
-                        @todo.Title
+                <p><em>Loading...</em></p>
+            }
+            else if (todos.Count == 0)
+            {
+                <p>No todo lists found.</p>
+            }
+            else
+            {
+                <ul>
+                    @foreach (var todo in todos)
+                    {
+                        <li @onclick="() => SelectTodo(todo.Id)" class="@GetSidebarItemClass(todo)">
+                            @todo.Title
+                        </li>
+                    }
+                </ul>
+            }
+
+            <div class="add-todo-button">
+                <button @onclick="EnterAddMode" class="addbtn">
+                    <Icon Name="IconName.Plus" Size="IconSize.x4" />
+                </button>
+            </div>
+        </div>
+
+        <div class="sticky-note-container">
+            @if (selectedTodo == null && !isAdding)
+            {
+                <p>Select a todo item to see details.</p>
+            }
+            else if (isAdding)
+            {
+                <!-- Form to add a new note -->
+                <div class="sticky-note" style="background-color: #ffd700; --sticky-note-border-color: #ffd700;">
+                    <div class="title" style="margin-bottom:1em;">
+                        <input @bind="newTodo.Title" class="form-control" style="background-color: #ffd700; outline: none;" placeholder="Title" />
                     </div>
                     <div class="text">
-                        @((MarkupString)todo.Description)
+                        <textarea @bind="newTodo.Description" class="form-control" style="height: 350px; resize: none; background-color: #ffd700; outline: none;" placeholder=""></textarea>
+                    </div>
+                    <div class="actionButtons">
+                        <button @onclick="SaveNewTodo" class="btn btn-success">
+                            <Icon Name="IconName.CheckLg" Size="IconSize.x5" />
+                        </button>
+                        <button @onclick="CancelAddMode" class="btn btn-danger">
+                            <Icon Name="IconName.XLg" Size="IconSize.x5" />
+                        </button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="sticky-note" style="background-color: @(selectedTodo.Color); --sticky-note-border-color: @(selectedTodo.Color);">
+                    <div class="title" style="margin-bottom:1em;">
+                        @if (isEditing)
+                        {
+                            <input @bind="selectedTodo.Title" class="form-control" style="background-color: #ffd700; outline: none;" />
+                        }
+                        else
+                        {
+                            <h3>@selectedTodo.Title</h3>
+                        }
+                    </div>
+                    <div class="text">
+                        @if (isEditing)
+                        {
+                            <textarea @bind="selectedTodo.Description" class="form-control" style="height: 350px; resize: none; background-color: #ffd700; outline: none;"></textarea>
+                        }
+                        else
+                        {
+                            <p>@((MarkupString)selectedTodo.Description)</p>
+                        }
                     </div>
 
+                    <!-- Move the action buttons to the bottom of the sticky note -->
                     <div class="actionButtons">
-                        <label class="switch">
-                            <input type="checkbox" @bind="todo.isDone" />
-                            <span class="slider round"></span>
-                        </label>
-                        <button class="pinbtn btn btn-info" @onclick="() => TogglePin(todo)">
-                            <Icon Name="@(todo.IsPinned ? IconName.PinFill : IconName.Pin)" Size="IconSize.x5" />
-                        </button>
-
-                        <a href="@($"/todolists/details?id=" + todo.Id)" class="viewbtn btn btn-primary">
-                            <Icon Name="IconName.EyeFill" Size="IconSize.x5" />
-                        </a>
-                        <a href="@($"/todolists/edit?id=" + todo.Id)" class="editbtn btn btn-warning">
-                            <Icon Name="IconName.PencilFill" Size="IconSize.x5" />
-                        </a>
-                        <a href="@($"/todolists/delete?id=" + todo.Id)" class="deletebtn btn btn-danger">
-                            <Icon Name="IconName.TrashFill" Size="IconSize.x5" />
-                        </a>
+                        @if (isEditing)
+                        {
+                            <button @onclick="SaveTodo" class="editbtn btn btn-success">
+                                <Icon Name="IconName.CheckLg" Size="IconSize.x5" />
+                            </button>
+                            <button @onclick="CancelEditing" class="cancelbtn btn btn-danger">
+                                <Icon Name="IconName.XLg" Size="IconSize.x5" />
+                            </button>
+                        }
+                        else
+                        {
+                            <button @onclick="EnterEditMode" class="editbtn btn btn-warning">
+                                <Icon Name="IconName.PencilFill" Size="IconSize.x5" />
+                            </button>
+                            <button @onclick="ShowDeleteConfirmation" class="deletebtn btn btn-danger">
+                                <Icon Name="IconName.TrashFill" Size="IconSize.x5" />
+                            </button>
+                        }
                     </div>
                 </div>
             }
         </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    @if (showDeleteConfirmation)
+    {
+        <div class="modal fade show" tabindex="-1" style="display:block;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Delete</h5>
+                        <button type="button" class="btn-close" @onclick="HideDeleteConfirmation"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this note?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="HideDeleteConfirmation">Cancel</button>
+                        <button type="button" class="btn btn-danger" @onclick="DeleteTodo">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
     }
 }
 else
@@ -74,56 +141,114 @@ else
 
 @code {
     private List<TodoList>? todos; // List of todo items
+    private TodoList? selectedTodo; // Currently selected todo item
+    private TodoList newTodo = new TodoList(); // Temporary object for new todo
+    private bool isEditing = false; // Track if we are in editing mode
+    private bool isAdding = false; // Track if we are in adding mode
+    private bool showDeleteConfirmation = false; // Show/Hide delete confirmation modal
 
     protected override async Task OnInitializedAsync()
     {
-        // Check if the user is logged in
-        if (loginService.IsLoggedIn)
+        try
         {
-            var userId = loginService.Id;
+            if (loginService.IsLoggedIn)
+            {
+                var userId = loginService.Id;
+                todos = await DB.TodoLists
+                    .Where(t => t.UserId == userId)
+                    .ToListAsync();
 
-            // Fetch the todo lists for the logged-in user
-            todos = await DB.TodoLists
-                .Where(t => t.UserId == userId)
-                .ToListAsync();
+                if (todos.Any())
+                {
+                    selectedTodo = todos.First();
+                }
+            }
+            else
+            {
+                todos = new List<TodoList>();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error loading todos: {ex.Message}");
         }
     }
 
-    private string GetCircleDotColor(bool isDone)
+    private void SelectTodo(int todoId)
     {
-        // Return color based on whether the todo is done or not
-        return isDone ? "red" : "green";
+        selectedTodo = todos?.FirstOrDefault(t => t.Id == todoId);
+        isEditing = false; // Exit editing mode if a new todo is selected
+        isAdding = false; // Exit adding mode if a new todo is selected
     }
 
-    private string GetNoteCssClass(TodoList item)
+    private string GetSidebarItemClass(TodoList todo)
     {
-        // Return CSS class based on whether the todo is done
-        return item.isDone ? "done" : "";
+        return selectedTodo != null && selectedTodo.Id == todo.Id ? "active" : "";
     }
 
-    private void TogglePin(TodoList todo)
+    private void EnterEditMode()
     {
-        // Unpin any currently pinned todo items
-        var pinnedTodo = DB.TodoLists
-            .Where(t => t.UserId == loginService.Id && t.IsPinned)
-            .FirstOrDefault();
+        isEditing = true;
+    }
 
-        if (pinnedTodo != null && pinnedTodo.Id != todo.Id)
+    private void EnterAddMode()
+    {
+        isAdding = true;
+        newTodo = new TodoList { Color = "#ffd700" }; // Initialize with default color
+    }
+
+    private async Task SaveTodo()
+    {
+        if (selectedTodo != null)
         {
-            pinnedTodo.IsPinned = false;
-            DB.TodoLists.Update(pinnedTodo);
+            DB.TodoLists.Update(selectedTodo);
+            await DB.SaveChangesAsync();
+            isEditing = false; // Exit editing mode after saving
         }
+    }
 
-        // Toggle pin state of the current todo
-        todo.IsPinned = !todo.IsPinned;
-        DB.TodoLists.Update(todo);
+    private async Task SaveNewTodo()
+    {
+        var userId = loginService.Id;
+        newTodo.UserId = userId;
 
-        // Save changes to the database
-        DB.SaveChanges();
+        DB.TodoLists.Add(newTodo);
+        await DB.SaveChangesAsync();
 
-        // Refresh the todo list
-        todos = DB.TodoLists
-            .Where(t => t.UserId == loginService.Id)
-            .ToList();
+        todos?.Add(newTodo); // Add the new todo to the local list
+        selectedTodo = newTodo; // Select the newly added todo
+        isAdding = false; // Exit adding mode
+    }
+
+    private void CancelEditing()
+    {
+        isEditing = false; // Exit editing mode without saving changes
+    }
+
+    private void CancelAddMode()
+    {
+        isAdding = false; // Exit adding mode
+    }
+
+    private void ShowDeleteConfirmation()
+    {
+        showDeleteConfirmation = true;
+    }
+
+    private void HideDeleteConfirmation()
+    {
+        showDeleteConfirmation = false;
+    }
+
+    private async Task DeleteTodo()
+    {
+        if (selectedTodo != null)
+        {
+            DB.TodoLists.Remove(selectedTodo);
+            await DB.SaveChangesAsync();
+            todos?.Remove(selectedTodo); // Remove from the local list
+            selectedTodo = todos?.FirstOrDefault(); // Select the next available todo
+            showDeleteConfirmation = false; // Hide the confirmation modal
+        }
     }
 }

@@ -1,7 +1,147 @@
 ﻿@page "/settings"
+@inject IJSRuntime JS
+@inject DashboardDbContext DB
+@inject Dashboard.Services.LoginService loginService
+@using Microsoft.EntityFrameworkCore;
+@inject NavigationManager Nav
 
-<h1>Settings</h1>
+<div class="settings-container">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Settings</h3>
+        </div>
+        <div class="card-body">
+            @if (loginService.IsLoggedIn)
+            {
+                <EditForm Model="userSettings" OnValidSubmit="HandleValidSubmit"  > 
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <InputText id="username" class="form-control" @bind-Value="userSettings.Username" placeholder="Enter your username"  />
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <InputText id="email" type="email" class="form-control" @bind-Value="userSettings.Email" placeholder="Enter your email" />
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-group">
+                            <InputText id="password" type="@passwordInputType" class="form-control" @bind-Value="userSettings.Password" placeholder="Enter your password" />
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-primary" @onclick="TogglePasswordVisibility">
+                                    @if (passwordInputType == "password")
+                                    {
+                                        <Icon Name="IconName.EyeFill" Size="IconSize.x6" />
+                                    }
+                                    else
+                                    {
+                                        <Icon Name="IconName.EyeSlashFill" Size="IconSize.x6" />
+                                    }
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <InputText id="location" class="form-control" @bind-Value="userSettings.Location" placeholder="Enter your city" />
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <Icon Name="IconName.Floppy2Fill" Size="IconSize.x6" Style="margin-right: 5px;" />
+                            Save                       
+                        </button>
+                    </div>
+                </EditForm>
+            }
+            else
+            {
+                <p class="text-center">You need to <a href="/login" class="btn btn-link">log in</a> to update your settings.</p>
+            }
+
+        </div>
+    </div>
+</div>
 
 @code {
+    private UserSettingsViewModel userSettings = new UserSettingsViewModel();
+    private string passwordInputType = "password"; // Default to password type
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (loginService.IsLoggedIn)
+        {
+            var userId = loginService.Id;
+
+            // Retrieve user settings from the database
+            var user = await DB.Users.Include(u => u.Location)
+                                     .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user != null)
+            {
+                userSettings = new UserSettingsViewModel
+                    {
+                        Username = user.Username,
+                        Email = user.Email,
+                        Password = user.Password,
+                        Location = user.Location != null ? $"{user.Location.CityName}" : string.Empty
+                    };
+            }
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (loginService.IsLoggedIn)
+        {
+            var userId = loginService.Id;
+
+            // Retrieve user from the database
+            var user = await DB.Users.FindAsync(userId);
+
+            if (user != null)
+            {
+                // Update user settings
+                user.Username = userSettings.Username;
+                user.Email = userSettings.Email;
+                user.Password = userSettings.Password;
+                if (user.Location == null)
+                {
+                    user.Location = new Location();
+                }
+                user.Location.CityName = userSettings.Location;
+
+                // Save changes to the database
+                DB.Users.Update(user);
+                await DB.SaveChangesAsync();
+
+                // Optionally, redirect the user or show a success message
+                Nav.NavigateTo("/");
+            }
+        }
+    }
+
+
+    private void TogglePasswordVisibility()
+    {
+        passwordInputType = passwordInputType == "password" ? "text" : "password";
+    }
+
+    public class UserSettingsViewModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string Location { get; set; } = string.Empty;
+    }
 }

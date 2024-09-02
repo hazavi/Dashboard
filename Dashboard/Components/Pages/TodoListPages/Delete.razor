@@ -24,10 +24,6 @@
             <dd class="col-sm-10">@todolist.UserId</dd>
         </dl>
         <dl class="row">
-            <dt class="col-sm-2">TodoDue</dt>
-            <dd class="col-sm-10">@todolist.TodoDue</dd>
-        </dl>
-        <dl class="row">
             <dt class="col-sm-2">Title</dt>
             <dd class="col-sm-10">@todolist.Title</dd>
         </dl>
@@ -39,10 +35,7 @@
             <dt class="col-sm-2">DateCreated</dt>
             <dd class="col-sm-10">@todolist.DateCreated</dd>
         </dl>
-        <dl class="row">
-            <dt class="col-sm-2">isDone</dt>
-            <dd class="col-sm-10">@todolist.isDone</dd>
-        </dl>
+
         <EditForm method="post" Model="todolist" OnValidSubmit="DeleteTodoList" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(todolist is null)">Delete</button> |
             <a href="/todo">Back to List</a>

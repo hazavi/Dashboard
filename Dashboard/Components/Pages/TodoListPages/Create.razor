@@ -33,11 +33,6 @@
                 <InputText id="description" @bind-Value="TodoList.Description" class="form-control" />
                 <ValidationMessage For="() => TodoList.Description" class="text-danger" />
             </div>
-            <div class="mb-3">
-                <label for="tododue" class="form-label">Todo Due:</label>
-                <InputDate id="tododue" @bind-Value="TodoList.TodoDue" class="form-control" />
-                <ValidationMessage For="() => TodoList.TodoDue" class="text-danger" />
-            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>

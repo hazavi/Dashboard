@@ -1,0 +1,69 @@
+﻿.settings-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border:none;
+}
+
+.card {
+    width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: none;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    border: none;
+}
+
+.card-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+.form-control {
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.input-group-append .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+.text-center {
+    text-align: center;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}
