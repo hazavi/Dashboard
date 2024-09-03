@@ -6,13 +6,12 @@
 {
     <p>Loading...</p>
 }
-<!-- if no news items are available -->
-else if (newsItems.Length == 0)
+
+else if (newsItems.Length == 0) @* if no news items are available *@
 {
     <p>No news items available.</p>
 }
-<!-- Display the news items -->
-else
+else @* Display the news items *@
 {
 <div class="news-container">
     @foreach (var item in newsItems)

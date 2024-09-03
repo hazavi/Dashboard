@@ -1,14 +1,34 @@
 ﻿@page "/admin"
 @inject Dashboard.Services.LoginService loginService
+@using Dashboard.Connect
+@using Dashboard.Components.Pages.AdminPage
 
-@if (loginService.IsLoggedIn && loginService.IsAdmin)// if the user is logged in and is an Admin, access the page
+@if (loginService.IsLoggedIn && loginService.IsAdmin) // if the user is logged in and is an Admin, access the page
 {
-    <h1>Hello,Admin</h1>
-    
+    <div class="admin-page">
+        <h1>Admin Dashboard</h1>
+        <div class="admin-links">
+            <a href="users" class="admin-link">
+                <Icon Name="IconName.PersonLinesFill" Size="IconSize.x2" class="icon" />
+                <span class="link-text">User Management</span>
+            </a>
+            <a href="locations" class="admin-link">
+                <Icon Name="IconName.PinMapFill" Size="IconSize.x2" class="icon" />
+                <span class="link-text">Locations</span>
+            </a>
+            <a href="todolists" class="admin-link">
+                <Icon Name="IconName.StickyFill" Size="IconSize.x2" class="icon" />
+                <span class="link-text">Notes</span>
+            </a>
+        </div>
+    </div>
 }
 else
-{ // if user is not an admin, no access message displayed
-    <p>You don't have access to this page!</p>
+{
+    // if user is not an admin, no access message displayed
+    <div class="access-denied">
+        <p>You don't have access to this page!</p>
+    </div>
 }
 
 @code {

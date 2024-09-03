@@ -1,0 +1,58 @@
+﻿/* Main container for the admin page */
+.admin-page {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+    /* Header styling */
+    .admin-page h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+/* Container for admin links */
+.admin-links {
+    display: flex;
+    gap: 20px;
+}
+
+/* Styling for each admin link */
+.admin-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #007bff;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+    .admin-link:hover {
+        background-color: #e9ecef;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .admin-link .icon {
+        margin-right: 10px;
+    }
+
+/* Text next to the icon */
+.link-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-left:10px;
+}
+
+/* Access denied message styling */
+.access-denied {
+    text-align: center;
+    margin-top: 50px;
+}
+
+    .access-denied p {
+        font-size: 1.2rem;
+        color: #dc3545;
+    }

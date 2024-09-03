@@ -51,15 +51,19 @@ builder.Services.AddHttpClient<WeatherApiService>(client =>
 builder.Services.AddScoped<UserService>();
 builder.Services.AddSingleton<LoginService>();
 
+//Admin Service
+
 // Adding Blazor Bootstrap and Razor components for UI
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+
 // Configuring Entity Framework with SQL Server, using a connection string from configuration
 builder.Services.AddDbContext<DashboardDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
+
 
 // Add QuickGrid Entity Framework Adapter
 builder.Services.AddQuickGridEntityFrameworkAdapter();

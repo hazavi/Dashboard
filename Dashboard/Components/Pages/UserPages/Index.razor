@@ -1,42 +1,112 @@
 ﻿@page "/users"
 
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using Dashboard.Model
 @using Dashboard.Connect
 @inject Dashboard.Connect.DashboardDbContext DB
 @inject Dashboard.Services.LoginService loginService
 @inject NavigationManager Nav
 
-
-<PageTitle>Index</PageTitle>
-
 @if (loginService.IsLoggedIn && loginService.IsAdmin)
 {
-    <h1>Index</h1>
+    <div class="users-page">
+        <div class="header">
+            <h2>User Management</h2>
+            <a href="users/create" class="btn btn-primary">Create New User</a>
+        </div>
 
-    <p>
-        <a href="users/create">Create New</a>
-    </p>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (users != null && users.Any())
+                {
+                    @foreach (var user in PaginatedUsers)
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.Username</td>
+                            <td>@user.Password</td>
+                            <td>@user.Email</td>
+                            <td class="action-buttons">
+                                <a href="@($"users/edit?id={user.Id}")" class="btn btn-sm btn-warning">
+                                    <Icon Name="IconName.PencilFill" Size="IconSize.x6" />
+                                </a>
+                                <a href="@($"users/details?id={user.Id}")" class="btn btn-sm btn-info">
+                                    <Icon Name="IconName.EyeFill" Size="IconSize.x6" />
+                                </a>
+                                <a href="@($"users/delete?id={user.Id}")" class="btn btn-sm btn-danger">
+                                    <Icon Name="IconName.TrashFill" Size="IconSize.x6" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No users found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-    <QuickGrid Class="table" Items="DB.Users">
-        <PropertyColumn Property="user => user.Id" />
-        <PropertyColumn Property="user => user.Username" />
-        <PropertyColumn Property="user => user.Password" />
-        <PropertyColumn Property="user => user.Email" />
-
-        <TemplateColumn Context="user">
-            <a href="@($"users/edit?id={user.Id}")">Edit</a> |
-            <a href="@($"users/details?id={user.Id}")">Details</a> |
-            <a href="@($"users/delete?id={user.Id}")">Delete</a>
-        </TemplateColumn>
-    </QuickGrid>
+        <div class="pagination">
+            @if (totalPages > 1)
+            {
+                @if (currentPage > 1)
+                {
+                    <a @onclick="() => ChangePage(currentPage - 1)" class="btn btn-light">Previous</a>
+                }
+                @if (currentPage < totalPages)
+                {
+                    <a @onclick="() => ChangePage(currentPage + 1)" class="btn btn-light">Next</a>
+                }
+            }
+        </div>
+    </div>
 }
 else
 {
-    <p>You do not have permission to view this page.</p>
-    @if (!loginService.IsLoggedIn)
+    <div class="access-denied">
+        <p>You do not have permission to view this page.</p>
+        @if (!loginService.IsLoggedIn)
+        {
+            <p>Please <a href="/login" class="login-link">log in</a>.</p>
+        }
+    </div>
+}
+
+@code {
+    private List<User> users = new List<User>();
+    private List<User> PaginatedUsers => users.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+    private int currentPage = 1;
+    private int pageSize = 10;
+    private int totalPages => (int)Math.Ceiling((double)users.Count / pageSize);
+
+    protected override async Task OnInitializedAsync()
     {
-        <p>Please <a href="/login">log in</a>.</p>
+        try
+        {
+            users = await DB.Users.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            // Log the exception or show an error message
+            Console.Error.WriteLine($"Error loading users: {ex.Message}");
+        }
+    }
+
+    private void ChangePage(int newPage)
+    {
+        if (newPage < 1 || newPage > totalPages) return;
+        currentPage = newPage;
     }
 }

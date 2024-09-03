@@ -1,0 +1,82 @@
+﻿/* Main container for the users page */
+.users-page {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Header styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+    .header h2 {
+        font-size: 2rem;
+        margin: 0;
+    }
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+    .user-table th, .user-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .user-table th {
+        background-color: #f4f4f4;
+    }
+
+    .user-table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+.action-buttons a {
+    margin-right: 5px;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+}
+
+.btn-light {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #495057;
+}
+
+    .btn-light:hover {
+        background-color: #e2e6ea;
+        border-color: #dae0e5;
+    }
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.access-denied {
+    text-align: center;
+    margin-top: 50px;
+}
+
+    .access-denied p {
+        font-size: 1.2rem;
+        color: #dc3545;
+    }
+
+.login-link {
+    color: #007bff;
+}
