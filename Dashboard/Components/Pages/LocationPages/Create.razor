@@ -8,41 +8,44 @@
 
 <h1>Create Location</h1>
 
-<h4>Location</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm Model="Location" OnValidSubmit="AddLocation">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" />
+<div class="form-container">
+    <EditForm Model="Location" OnValidSubmit="AddLocation" class="form">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" />
 
-            <div class="mb-3">
-                <label for="userid" class="form-label">UserId:</label>
-                <InputNumber id="userid" @bind-Value="Location.UserId" class="form-control" readonly="readonly" />
-                <ValidationMessage For="() => Location.UserId" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="zipcode" class="form-label">ZipCode:</label>
-                <InputNumber id="zipcode" @bind-Value="Location.ZipCode" class="form-control" />
-                <ValidationMessage For="() => Location.ZipCode" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="cityname" class="form-label">CityName:</label>
-                <InputText id="cityname" @bind-Value="Location.CityName" class="form-control" />
-                <ValidationMessage For="() => Location.CityName" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="country" class="form-label">Country:</label>
-                <InputText id="country" @bind-Value="Location.Country" class="form-control" />
-                <ValidationMessage For="() => Location.Country" class="text-danger" />
-            </div>
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
-    </div>
+        <div class="form-group">
+            <label for="userid" class="form-label">UserId:</label>
+            <InputNumber id="userid" @bind-Value="Location.UserId" class="form-control" readonly="readonly" />
+            <ValidationMessage For="() => Location.UserId" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="zipcode" class="form-label">ZipCode:</label>
+            <InputNumber id="zipcode" @bind-Value="Location.ZipCode" class="form-control" />
+            <ValidationMessage For="() => Location.ZipCode" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="cityname" class="form-label">CityName:</label>
+            <InputText id="cityname" @bind-Value="Location.CityName" class="form-control" />
+            <ValidationMessage For="() => Location.CityName" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="country" class="form-label">Country:</label>
+            <InputText id="country" @bind-Value="Location.Country" class="form-control" />
+            <ValidationMessage For="() => Location.Country" class="text-danger" />
+        </div>
+
+        <button type="submit" class="btn btn-primary form-button">Create</button>
+    </EditForm>
 </div>
 
-<div>
-    <a href="/profile" class="btn btn-secondary">Back to Profile</a>
+<div class="back-link">
+    <a href="/profile">
+        <Icon Name="IconName.ArrowLeft" Size="IconSize.x5" />
+    </a>
 </div>
 
 @code {
@@ -63,7 +66,7 @@
         var existingLocation = await DbContext.Locations.FirstOrDefaultAsync(l => l.UserId == Location.UserId);
         if (existingLocation != null)
         {
-            // Optionally, handle this case (e.g., show an error message or redirect)
+            // Handle this case by redirecting to profile page
             NavigationManager.NavigateTo("/profile");
             return;
         }

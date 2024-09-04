@@ -1,0 +1,52 @@
+﻿/* Container for the details section */
+.details-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Detail labels */
+.detail-label {
+    font-weight: bold;
+    color: #495057;
+}
+
+/* Detail values */
+.detail-value {
+    color: #212529;
+}
+
+/* Action links */
+.action-links {
+    margin-top: 20px;
+    text-align: center;
+}
+
+    .action-links .btn {
+        margin: 0 5px;
+    }
+
+    .action-links .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+
+        .action-links .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .action-links .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+        .action-links .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }

@@ -1,0 +1,65 @@
+﻿/* Container for the delete confirmation page */
+.delete-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Warning text for delete confirmation */
+.warning-text {
+    color: #dc3545;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* User details section */
+.user-details {
+    margin-top: 20px;
+}
+
+/* Detail labels */
+.detail-label {
+    font-weight: bold;
+    color: #495057;
+}
+
+/* Detail values */
+.detail-value {
+    color: #212529;
+}
+
+/* Form for delete action */
+.delete-form {
+    margin-top: 20px;
+    text-align: center;
+}
+
+    /* Button styling */
+    .delete-form .btn {
+        margin: 0 5px;
+    }
+
+    .delete-form .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+        .delete-form .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+    .delete-form .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+        .delete-form .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }

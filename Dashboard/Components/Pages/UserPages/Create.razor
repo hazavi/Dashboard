@@ -10,37 +10,41 @@
 <h1>Create Account</h1>
 
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm Model="User" OnValidSubmit="AddUser">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" />
-            <div class="mb-3">
-                <label for="username" class="form-label">Username:</label>
-                <InputText id="username" @bind-Value="User.Username" class="form-control" />
-                <ValidationMessage For="() => User.Username" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password:</label>
-                <InputText id="password" @bind-Value="User.Password" class="form-control" />
-                <ValidationMessage For="() => User.Password" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email:</label>
-                <InputText id="email" @bind-Value="User.Email" class="form-control" />
-                <ValidationMessage For="() => User.Email" class="text-danger" />
-            </div>
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
-    </div>
+<div class="form-container">
+    <EditForm Model="User" OnValidSubmit="AddUser" class="form">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" />
+
+        <div class="form-group">
+            <label for="username" class="form-label">Username:</label>
+            <InputText id="username" @bind-Value="User.Username" class="form-control" />
+            <ValidationMessage For="() => User.Username" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="password" class="form-label">Password:</label>
+            <InputText id="password" @bind-Value="User.Password" type="password" class="form-control" />
+            <ValidationMessage For="() => User.Password" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="form-label">Email:</label>
+            <InputText id="email" @bind-Value="User.Email" class="form-control" />
+            <ValidationMessage For="() => User.Email" class="text-danger" />
+        </div>
+
+        <button type="submit" class="btn btn-primary form-button">Create</button>
+    </EditForm>
 </div>
 
-<div>
-    <a href="/users">Back to List</a>
+<div class="back-link">
+    <a href="/users">
+        <Icon Name="IconName.ArrowLeft" Size="IconSize.x5" />
+        
+    </a>
 </div>
 
 @code {
-
     public User User { get; set; } = new();
 
     public async Task AddUser()
@@ -49,7 +53,7 @@
         DbContext.Users.Add(User);
         await DbContext.SaveChangesAsync();
 
-        // Redirect to the location creation page with the user's ID as a query parameter
+        // Redirect to the profile page
         NavigationManager.NavigateTo($"/profile");
     }
 }

@@ -44,7 +44,7 @@ namespace Dashboard.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("DashboardStates");
+                    b.ToTable("DashboardStates", (string)null);
                 });
 
             modelBuilder.Entity("Dashboard.Model.Location", b =>
@@ -74,7 +74,7 @@ namespace Dashboard.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("Dashboard.Model.Setting", b =>
@@ -105,7 +105,7 @@ namespace Dashboard.Migrations
 
                     b.HasIndex("UserId1");
 
-                    b.ToTable("Settings");
+                    b.ToTable("Settings", (string)null);
                 });
 
             modelBuilder.Entity("Dashboard.Model.TodoList", b =>
@@ -139,7 +139,7 @@ namespace Dashboard.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TodoLists");
+                    b.ToTable("TodoLists", (string)null);
                 });
 
             modelBuilder.Entity("Dashboard.Model.User", b =>
@@ -170,7 +170,7 @@ namespace Dashboard.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Dashboard.Model.DashboardState", b =>

@@ -7,6 +7,7 @@ namespace Dashboard.Model
         public int Id { get; set; }
         [Required(ErrorMessage = "Please provide Username")]
         [StringLength(20)]
+        [UniqueUsername]
         public string Username { get; set; }
 
         [Required(ErrorMessage = "Please provide a Password")]

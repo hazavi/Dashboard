@@ -5,11 +5,10 @@
 @inject Dashboard.Connect.DashboardDbContext DB
 @inject NavigationManager NavigationManager
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>Edit User</PageTitle>
 
-<h1>Edit</h1>
+<h1>Edit User</h1>
 
-<h4>User</h4>
 <hr />
 @if (User is null)
 {
@@ -17,47 +16,51 @@
 }
 else
 {
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="User" OnValidSubmit="UpdateUser" FormName="edit" Enhance>
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <input type="hidden" name="User.Id" value="@User.Id" />
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username:</label>
-                    <InputText id="username" @bind-Value="User.Username" class="form-control" />
-                    <ValidationMessage For="() => User.Username" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password:</label>
-                    <InputText id="password" @bind-Value="User.Password" class="form-control" />
-                    <ValidationMessage For="() => User.Password" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email:</label>
-                    <InputText id="email" @bind-Value="User.Email" class="form-control" />
-                    <ValidationMessage For="() => User.Email" class="text-danger" />
-                </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </EditForm>
-        </div>
+    <div class="form-container">
+        <EditForm method="post" Model="User" OnValidSubmit="UpdateUser" class="form">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+
+            <input type="hidden" name="User.Id" value="@User.Id" />
+
+            <div class="form-group">
+                <label for="username" class="form-label">Username:</label>
+                <InputText id="username" @bind-Value="User.Username" class="form-control" />
+                <ValidationMessage For="() => User.Username" class="text-danger" />
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password:</label>
+                <InputText id="password" @bind-Value="User.Password" class="form-control" />
+                <ValidationMessage For="() => User.Password" class="text-danger" />
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email:</label>
+                <InputText id="email" @bind-Value="User.Email" class="form-control" />
+                <ValidationMessage For="() => User.Email" class="text-danger" />
+            </div>
+
+            <button type="submit" class="btn btn-primary form-button">Save</button>
+        </EditForm>
     </div>
 }
 
-<div>
-    <a href="/users">Back to List</a>
+<div class="back-link">
+    <a href="/users">
+        <Icon Name="IconName.ArrowLeft" Size="IconSize.x5" />
+    </a>
 </div>
 
 @code {
     [SupplyParameterFromQuery]
     public int Id { get; set; }
 
-    [SupplyParameterFromForm]
     public User? User { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        User ??= await DB.Users.FirstOrDefaultAsync(m => m.Id == Id);
+        User = await DB.Users.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (User is null)
         {
