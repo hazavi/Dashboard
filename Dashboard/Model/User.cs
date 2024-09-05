@@ -7,7 +7,7 @@ namespace Dashboard.Model
         public int Id { get; set; }
         [Required(ErrorMessage = "Please provide Username")]
         [StringLength(20)]
-        [UniqueUsername]
+        [UniqueUsername] // make username unique, so only one user can have that username
         public string Username { get; set; }
 
         [Required(ErrorMessage = "Please provide a Password")]

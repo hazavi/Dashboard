@@ -7,32 +7,38 @@
 @inject Dashboard.Services.LoginService loginService
 @inject Dashboard.Connect.DashboardDbContext DB
 
-
-
-
-@if (loginService.IsLoggedIn && loginService.IsAdmin)
-{
-    <h1>Index</h1>
-
-
-    <QuickGrid Class="table" Items="DB.Locations">
-        <PropertyColumn Property="location => location.UserId" />
-        <PropertyColumn Property="location => location.ZipCode" />
-        <PropertyColumn Property="location => location.CityName" />
-        <PropertyColumn Property="location => location.Country" />
-
-        <TemplateColumn Context="location">
-            <a href="@($"locations/edit?id={location.Id}")">Edit</a> |
-            <a href="@($"locations/details?id={location.Id}")">Details</a> |
-            <a href="@($"locations/delete?id={location.Id}")">Delete</a>
-        </TemplateColumn>
-    </QuickGrid>
-}
-else
-{
-    <p>You do not have permission to view this page.</p>
-    @if (!loginService.IsLoggedIn)
+<div class="locations-page">
+    @if (loginService.IsLoggedIn && loginService.IsAdmin)
     {
-        <p>Please <a href="/login">log in</a>.</p>
+        <h1 class="page-title">Locations</h1>
+
+        <div class="table-container">
+            <QuickGrid Class="table table-striped table-hover" Items="DB.Locations">
+                <PropertyColumn Property="location => location.UserId" Title="User ID" />
+                <PropertyColumn Property="location => location.ZipCode" Title="Zip Code" />
+                <PropertyColumn Property="location => location.CityName" Title="City Name" />
+                <PropertyColumn Property="location => location.Country" Title="Country" />
+
+                <TemplateColumn Context="location">
+                    <div class="action-links">
+                        <a href="@($"locations/edit?id={location.Id}")" class="edit-link">Edit</a>
+                        <span>|</span>
+                        <a href="@($"locations/details?id={location.Id}")" class="details-link">Details</a>
+                        <span>|</span>
+                        <a href="@($"locations/delete?id={location.Id}")" class="delete-link">Delete</a>
+                    </div>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
     }
-}
+    else
+    {
+        <div class="access-denied">
+            <p>You do not have permission to view this page.</p>
+            @if (!loginService.IsLoggedIn)
+            {
+                <p>Please <a href="/login" class="login-link">log in</a>.</p>
+            }
+        </div>
+    }
+</div>

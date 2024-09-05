@@ -1,0 +1,87 @@
+﻿/* Container for the entire page */
+.locations-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Page title styling */
+.page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #343a40;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Container for the table */
+.table-container {
+    overflow-x: auto;
+}
+
+/* Table styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #212529;
+}
+
+    .table th, .table td {
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        text-align: left;
+    }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f8f9fa;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Action links styling */
+.action-links {
+    display: flex;
+    gap: 10px;
+}
+
+    .action-links a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+
+    .action-links span {
+        color: #6c757d;
+    }
+
+/* Access denied message styling */
+.access-denied {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 50px;
+}
+
+    .access-denied p {
+        font-size: 1.2rem;
+        color: #dc3545;
+    }
+
+.login-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+    .login-link:hover {
+        text-decoration: underline;
+    }
