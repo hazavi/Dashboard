@@ -31,8 +31,10 @@ else
 }
 
 @code {
+    // List to hold the movies that are top-rated
     private List<TopRatedMovie> movies;
 
+    // fetch the list of top-rated movies asynchronously
     protected override async Task OnInitializedAsync()
     {
         movies = await MovieService.GetTopRatedMoviesAsync();

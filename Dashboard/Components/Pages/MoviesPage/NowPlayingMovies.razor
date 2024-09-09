@@ -2,14 +2,13 @@
 @inject Dashboard.Services.Movies.NowPlayingMovies MovieService
 @using Dashboard.Services.Movies
 
-
 @if (movies == null)
 {
-    <p>Loading...</p>
+    <p>Loading...</p> 
 }
 else if (movies.Count == 0)
 {
-    <p>No movies found.</p>
+    <p>No movies found.</p> 
 }
 else
 {
@@ -19,9 +18,12 @@ else
             {
                 <div class="movie-card">
                     <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="movie-poster" />
+
                     <div class="movie-info">
                         <strong>@movie.Title</strong>
+
                         <p class="release-date">@FormatReleaseDate(movie.ReleaseDate)</p>
+
                         <p class="rating">Rating: @FormatVoteAverage(movie.VoteAverage)</p>
                     </div>
                 </div>
@@ -31,8 +33,10 @@ else
 }
 
 @code {
+    // List to hold the movies that are currently playing
     private List<NowPlayingMovie> movies;
 
+    // fetch the list of now-playing movies asynchronously
     protected override async Task OnInitializedAsync()
     {
         movies = await MovieService.GetNowPlayingMoviesAsync();
@@ -42,29 +46,30 @@ else
     {
         if (DateTime.TryParse(releaseDate, out var date))
         {
-            var formattedDate = date.ToString("MMMM d, yyyy"); // Format: Month day, year
-            return CapitalizeMonth(formattedDate);
+            var formattedDate = date.ToString("MMMM d, yyyy"); // Format the date: Month day, year
+            return CapitalizeMonth(formattedDate); // Capitalize the first letter of the month
         }
-        return releaseDate; // Return the original if parsing fails
+        return releaseDate; // Return the original date string if parsing fails
     }
 
+    // Capitalizes the first letter of the month in the formatted date string
     private string CapitalizeMonth(string date)
     {
-        // Split the date into parts
+        // Split the date into parts ("January 1, 2023" becomes ["January", "1,", "2023"])
         var parts = date.Split(' ');
 
         if (parts.Length > 1)
         {
             // Capitalize the first letter of the month part
             parts[0] = char.ToUpper(parts[0][0]) + parts[0].Substring(1);
-            return string.Join(' ', parts);
+            return string.Join(' ', parts); // Join the parts back together into a single string
         }
 
-        return date;
+        return date; // Return the original date string if the split fails
     }
 
     private string FormatVoteAverage(double voteAverage)
     {
-        return Math.Round(voteAverage, 2).ToString("0.00"); // Round to two decimal places
+        return Math.Round(voteAverage, 2).ToString("0.00"); // Round to two decimal places and convert to string
     }
 }

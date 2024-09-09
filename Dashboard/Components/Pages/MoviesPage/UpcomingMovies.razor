@@ -31,8 +31,10 @@ else
 }
 
 @code {
+    // List to hold the movies that are upcoming
     private List<UpcomingMovie> movies;
 
+    // fetch the list of upcoming movies asynchronously
     protected override async Task OnInitializedAsync()
     {
         movies = await MovieService.GetUpcomingMoviesAsync();

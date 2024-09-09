@@ -13,13 +13,14 @@
 
 @if (holidays == null)
 {
-    <p><em>Loading holidays...</em></p>
+    <p><em>Loading holidays...</em></p> 
 }
 else
 {
     <div class="calendar-container">
         <div class="calendar-month">
             <h3>@currentMonth.ToString("MMMM yyyy")</h3>
+
             <div class="calendar-grid">
                 @* Display day headers *@
                 <div class="calendar-day-header">Sun</div>
@@ -37,19 +38,20 @@ else
                 }
                 @for (int i = 0; i < paddingDays; i++)
                 {
-                    <div class="calendar-day empty"></div>
+                    <div class="calendar-day empty"></div> <!-- Empty cells to align the start of the month -->
                 }
 
-                @* Display days with holidays *@
+                @* Display days of the current month and highlight holidays *@
                 @for (int day = 1; day <= DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month); day++)
                 {
                     var currentDate = new DateTime(currentMonth.Year, currentMonth.Month, day);
                     var holiday = holidays.FirstOrDefault(h => h.Date.Iso == currentDate.ToString("yyyy-MM-dd"));
 
                     <div class="calendar-day @GetDayCssClass(currentDate)">
-                        <span>@day</span>
+                        <span>@day</span> <!-- Display the day number -->
                         @if (holiday != null)
                         {
+                            <!-- If there's a holiday on this day, display its name and description -->
                             <div class="holiday-info">
                                 <strong>@holiday.Name</strong>
                                 <p>@holiday.Description</p>
@@ -63,47 +65,56 @@ else
 }
 
 @code {
+    // Store the currently viewed month
     private DateTime currentMonth;
+
+    // List to hold the holidays for the current month
     private List<Holiday>? holidays;
 
+    // On component initialization, set the current month to the current date and load the holidays
     protected override async Task OnInitializedAsync()
     {
         currentMonth = DateTime.Now;
         await LoadHolidaysAsync();
     }
 
+    // Load holidays for the current month asynchronously
     private async Task LoadHolidaysAsync()
     {
         holidays = await CalendarService.GetHolidaysAsync();
         Console.WriteLine($"Loaded holidays: {holidays.Count}");
 
-        // Debugging: Check if holidays have been loaded correctly
+        // Debugging: Output holiday details to the console
         foreach (var holiday in holidays)
         {
             Console.WriteLine($"Holiday: {holiday.Name} on {holiday.Date.Iso}");
         }
     }
 
+    // Show the previous month and reload holidays
     private async Task ShowPreviousMonth()
     {
-        currentMonth = currentMonth.AddMonths(-1);
-        await LoadHolidaysAsync();
+        currentMonth = currentMonth.AddMonths(-1); // Go to the previous month
+        await LoadHolidaysAsync(); // Load holidays for the new month
     }
 
+    // Show the current month and reload holidays
     private async Task ShowCurrentMonth()
     {
-        currentMonth = DateTime.Now;
-        await LoadHolidaysAsync();
+        currentMonth = DateTime.Now; // Set current month to today's date
+        await LoadHolidaysAsync(); // Reload holidays for the current month
     }
 
+    // Show the next month and reload holidays
     private async Task ShowNextMonth()
     {
-        currentMonth = currentMonth.AddMonths(1);
-        await LoadHolidaysAsync();
+        currentMonth = currentMonth.AddMonths(1); // Go to the next month
+        await LoadHolidaysAsync(); // Load holidays for the new month
     }
 
+    // Return a CSS class to highlight the current day
     private string GetDayCssClass(DateTime date)
     {
-        return date.Date == DateTime.Now.Date ? "today" : "";
+        return date.Date == DateTime.Now.Date ? "today" : ""; // Add "today" class if the date matches today's date
     }
 }

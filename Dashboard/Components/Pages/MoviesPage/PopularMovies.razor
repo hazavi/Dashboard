@@ -31,8 +31,10 @@ else
 }
 
 @code {
+    // List to hold the movies that are popular
     private List<PopularMovie> movies;
 
+    // fetch the list of popular movies asynchronously
     protected override async Task OnInitializedAsync()
     {
         movies = await MovieService.GetPopularMoviesAsync();
