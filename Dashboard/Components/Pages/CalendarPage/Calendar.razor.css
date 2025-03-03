@@ -1,79 +1,105 @@
-﻿.calendar-controls {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-    .calendar-controls button {
-        margin: 0 10px;
-        padding: 10px 20px;
-        font-size: 1rem;
-        cursor: pointer;
-        background-color:#fff;
-        border: none;
-    }
-    .calendar-controls button:hover {
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
+﻿/* Calendar Container */
 .calendar-container {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .calendar-month {
-    width: 100%;
-    max-width: 800px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    height: 400px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
+/* Calendar Header */
+.calendar-controls {
+    display: flex;
+    justify-content:center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+    .calendar-controls button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: #333;
+        transition: opacity 0.3s ease;
+    }
+
+        .calendar-controls button:hover {
+            opacity: 0.6;
+        }
+
+/* Month Name */
+.calendar-month h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Calendar Grid */
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    grid-gap: 5px;
+    gap: 5px;
+    width: 100%;
 }
 
 .calendar-day-header {
     font-weight: bold;
     text-align: center;
     padding: 5px;
+    color: #666;
 }
 
 .calendar-day {
     position: relative;
-    min-height: 80px;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    text-align: center;
-    padding: 5px;
-    background-color: #f9f9f9;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: #f5f5f7;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
 }
 
     .calendar-day.empty {
-        background-color: transparent;
-        border: none;
+        background: transparent;
     }
 
 .today {
-    background-color: #ffeb3b;
-    border-color: #fbc02d;
+    background: #007aff;
+    color: #fff;
+    font-weight: bold;
 }
 
 .holiday {
-    background-color: #ffcccc;
-    border-color: #ff6666;
+    background: #ff3b30;
+    color: #fff;
+    font-weight: bold;
 }
 
 .holiday-info {
+    font-size: 10px;
     position: absolute;
     bottom: 5px;
     left: 5px;
     right: 5px;
-    font-size: 0.75rem;
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.8);
     padding: 3px;
-    border-radius: 3px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    text-align: center;
 }

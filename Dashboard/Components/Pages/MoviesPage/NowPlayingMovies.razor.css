@@ -1,7 +1,7 @@
 ﻿/* Container for centering the movie grid */
 .movie-container {
-    width: 600px;
-    height: 600px;
+    width: 400px;
+    height: 400px;
     overflow: auto; /* Allows scrolling if the content exceeds the container */
     margin: 0 auto; /* Centers the container horizontally */
     display: flex;
@@ -11,7 +11,6 @@
     background-color: #fff; /* Optional: Adds a background color to the container */
     padding: 10px; /* Optional: Adds padding inside the container */
     box-sizing: border-box; /* Ensures padding and border are included in the width and height */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .movie-grid {
@@ -20,7 +19,6 @@
     gap: 20px; /* Adjusts the gap between movie cards */
     justify-content: center; /* Centers the grid horizontally */
     align-items: flex-start; /* Aligns items to the start of the container */
-    width: 100%;
     height: 100%;
     box-sizing: border-box;
 }
@@ -28,7 +26,6 @@
 .movie-card {
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     flex: 1 1 calc(33.333% - 20px); /* Adjusts the card width to fit three in a row with gap */
     max-width: calc(33.333% - 20px); /* Ensures no more than three cards per row */
@@ -39,13 +36,13 @@
 }
 
     .movie-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     }
 
 .movie-poster {
     width: 100%;
-    height: 200px; /* Fixed height to ensure uniform card size */
+    height: 100%;
     object-fit: cover;
 }
 
@@ -56,20 +53,8 @@
 }
 
     .movie-info strong {
-        font-size: 1.2em;
+        font-size: 0.8em;
         color: #444;
         display: block;
         margin-bottom: 10px;
     }
-
-.release-date {
-    font-size: 0.9em;
-    color: #666;
-    margin: 0;
-}
-
-.rating {
-    font-size: 1em;
-    color: #333;
-    margin: 5px 0 0;
-}
