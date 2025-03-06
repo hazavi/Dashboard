@@ -1,8 +1,9 @@
 # Dashboard
-## Test Dashboard Web APP
-### Use this to Login
-- username: sai
-- password: sai123
+## Preview
+![login](https://github.com/user-attachments/assets/0c6045b6-de2a-45d1-bdb4-812bc3899ed8)
+![homepage](https://github.com/user-attachments/assets/80e3507f-2076-4367-ae00-084b2239a4f7)
+![profile](https://github.com/user-attachments/assets/ebf3a715-bcbf-4b05-bb50-3625d908c668)
+![settings](https://github.com/user-attachments/assets/c7da758a-163a-4775-bdca-309cffb1c911)
 
 ## Oplæg
 ### Beskrivelse af programmet
